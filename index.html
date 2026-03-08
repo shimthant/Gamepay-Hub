@@ -174,7 +174,7 @@ width:200px;
 
 <div id="cart"></div>
 
-Total: <span id="total">0</span> ks
+Total Amount: <span id="total">0</span> ks
 
 <textarea id="account" placeholder="Game ID / Server / Name"></textarea>
 
@@ -190,8 +190,6 @@ Total: <span id="total">0</span> ks
 </div>
 
 <button class="telegram" onclick="sendOrder()">Order via Telegram</button>
-
-<div id="history"></div>
 
 </div>
 
@@ -209,7 +207,7 @@ Total: <span id="total">0</span> ks
 <button onclick="closeQR()">Close</button>
 </div>
 </div>
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
 <script>
 
@@ -241,6 +239,15 @@ const TELEGRAM="angsthtun"
 
 let cart={}
 let currentGame=""
+
+let qrImages={
+"Kpay":"kpay.png",
+"Wave":"wave.png",
+"UAB":"uab.png",
+"Binance":"binance.png",
+"AyaPay":"aya.png",
+"WeChat Pay":"wechat.png"
+}
 
 let data={
 
@@ -377,6 +384,8 @@ let msg="Gamepay Hub Order\n\n"
 
 msg+="Game: "+data[currentGame].title+"\n\n"
 
+msg+="Selective Items:\n"
+
 for(let i in cart){
 
 if(cart[i]>0){
@@ -396,14 +405,25 @@ msg+="\nAccount: "+account+"\n"
 let pay=document.querySelector('input[name="pay"]:checked')
 
 if(pay){
+
 msg+="Payment: "+pay.value+"\n"
+
+document.getElementById("qrimg").src=qrImages[pay.value]
+document.getElementById("qrpopup").style.display="flex"
+
 }
 
-msg+="\nTotal: "+document.getElementById("total").textContent+" ks\n"
+msg+="\nTotal Amount: "+document.getElementById("total").textContent+" ks\n"
 
 navigator.clipboard.writeText(msg)
 
 window.open("https://t.me/"+TELEGRAM+"?text="+encodeURIComponent(msg))
+
+}
+
+function closeQR(){
+
+document.getElementById("qrpopup").style.display="none"
 
 }
 
