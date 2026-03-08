@@ -399,28 +399,17 @@ renderMenu()
 renderMenu()
 
 const screenshotInput = document.getElementById("screenshot")
-const preview = document.getElementById("preview")
 
-let screenshotFile = null
-
-screenshotInput.addEventListener("change",function(){
-
- screenshotFile = this.files[0]
-
- const file = this.files[0]
-
- if(file){
-
-  const reader = new FileReader()
-
-  reader.onload = function(e){
-   preview.src = e.target.result
+if(screenshotInput){
+ screenshotInput.addEventListener("change", function(){
+  const file = this.files[0]
+  if(file){
+   console.log("Screenshot:", file.name)
   }
+ })
+}
 
-  reader.readAsDataURL(file)
-
- }
-
-})
-</script>    </body>    
+</script>
+</body>
 </html>
+
