@@ -336,7 +336,6 @@ document.getElementById("cart").innerHTML=html
 document.getElementById("total").textContent=total    
     
 }    
-    
 function sendOrder(){
 
  let msg = "Gamepay Hub Order\n"
@@ -353,17 +352,14 @@ function sendOrder(){
  let account = document.getElementById("account").value
  msg += "\nAccount: " + account + "\n"
 
- msg += "\nTotal: " + total + " ks\n"
-
- if(screenshotFile){
-  msg += "\nScreenshot: Attached\n"
- }
+ msg += "\nTotal: " + document.getElementById("total").textContent + " ks\n"
 
  let url = "https://t.me/" + TELEGRAM + "?text=" + encodeURIComponent(msg)
 
  window.open(url)
 
-}
+}    
+
     
 }    
     
