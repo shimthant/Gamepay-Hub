@@ -46,11 +46,7 @@ margin-bottom:25px;
 .header h1{
 font-size:34px;
 color:#00ffff;
-text-shadow:0 0 15px #00ffff;
-}
-
-.header p{
-color:#8bd9ff;
+text-shadow:0 0 20px #00ffff;
 }
 
 .grid{
@@ -66,22 +62,15 @@ border-radius:15px;
 text-align:center;
 cursor:pointer;
 border:1px solid #00ffff40;
-transition:.3s;
 }
 
 .card:hover{
-box-shadow:0 0 15px #00ffff;
-transform:translateY(-4px);
+box-shadow:0 0 20px #00ffff;
 }
 
 .card img{
 width:60px;
 margin-bottom:8px;
-}
-
-.game-page{
-display:none;
-margin-top:20px;
 }
 
 .panel{
@@ -92,16 +81,9 @@ border:1px solid #00ffff30;
 margin-bottom:15px;
 }
 
-.preview img{
-width:100%;
-border-radius:10px;
-margin-bottom:10px;
-}
-
 .item{
 display:flex;
 justify-content:space-between;
-align-items:center;
 background:#06306d;
 padding:10px;
 border-radius:8px;
@@ -114,7 +96,6 @@ border:none;
 padding:4px 10px;
 border-radius:6px;
 cursor:pointer;
-font-weight:bold;
 }
 
 textarea{
@@ -125,27 +106,38 @@ padding:10px;
 margin-top:10px;
 }
 
-.btn{
-border:none;
-padding:10px;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-}
-
 .telegram{
 width:100%;
 margin-top:10px;
 background:#00ffff;
 color:#021733;
-font-size:18px;
-box-shadow:0 0 10px #00ffff;
+padding:10px;
+border:none;
+border-radius:8px;
+font-size:16px;
 }
 
-.footer{
+.qrpopup{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000000cc;
+display:none;
+justify-content:center;
+align-items:center;
+}
+
+.qrbox{
+background:#021733;
+padding:20px;
+border-radius:12px;
 text-align:center;
-margin-top:25px;
-color:#00ffff;
+}
+
+.qrbox img{
+width:200px;
 }
 
 </style>
@@ -164,15 +156,13 @@ color:#00ffff;
 
 <div id="menu" class="grid"></div>
 
-<div id="gamePage" class="game-page">
+<div id="gamePage" style="display:none">
 
 <div class="panel">
 
 <h2 id="gameTitle"></h2>
 
-<div class="preview">
-<img id="gameImage">
-</div>
+<img id="gameImage" style="width:100%;border-radius:10px">
 
 <div id="items"></div>
 
@@ -184,26 +174,40 @@ color:#00ffff;
 
 <div id="cart"></div>
 
-<div style="margin-top:10px">
 Total: <span id="total">0</span> ks
-</div>
 
 <textarea id="account" placeholder="Game ID / Server / Name"></textarea>
 
-<button class="btn telegram" onclick="sendOrder()">Order via Telegram</button>
+<div>
+
+<label><input type="radio" name="pay" value="Kpay">Kpay</label>
+<label><input type="radio" name="pay" value="Wave">Wave</label>
+<label><input type="radio" name="pay" value="UAB">UAB</label>
+<label><input type="radio" name="pay" value="Binance">Binance</label>
+<label><input type="radio" name="pay" value="AyaPay">AyaPay</label>
+<label><input type="radio" name="pay" value="WeChat Pay">WeChat</label>
+
+</div>
+
+<button class="telegram" onclick="sendOrder()">Order via Telegram</button>
 
 <div id="history"></div>
 
 </div>
 
-<button class="btn" onclick="backMenu()">Back</button>
+<button onclick="backMenu()">Back</button>
 
 </div>
 
-<div class="footer">
-Founder: Diameter Eight
 </div>
 
+<div id="qrpopup" class="qrpopup">
+<div class="qrbox">
+<h3>Scan To Pay</h3>
+<img id="qrimg">
+<br><br>
+<button onclick="closeQR()">Close</button>
+</div>
 </div>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
@@ -231,7 +235,7 @@ speed:2
 })
 
 </script>
-    <script>
+<script>
 
 const TELEGRAM="angsthtun"
 
@@ -264,15 +268,10 @@ for(let k in data){
 let g=data[k]
 
 menu.innerHTML+=`
-
 <div class="card" onclick="openGame('${k}')">
-
 <img src="${g.icon}" onerror="this.src='https://via.placeholder.com/60'">
-
 <div>${g.title}</div>
-
 </div>
-
 `
 
 }
@@ -321,9 +320,7 @@ box.innerHTML+=`
 <div class="qty">
 
 <button onclick="changeQty(${i},-1)">-</button>
-
 <span id="q${i}">0</span>
-
 <button onclick="changeQty(${i},1)">+</button>
 
 </div>
@@ -396,6 +393,12 @@ let account=document.getElementById("account").value
 
 msg+="\nAccount: "+account+"\n"
 
+let pay=document.querySelector('input[name="pay"]:checked')
+
+if(pay){
+msg+="Payment: "+pay.value+"\n"
+}
+
 msg+="\nTotal: "+document.getElementById("total").textContent+" ks\n"
 
 navigator.clipboard.writeText(msg)
@@ -410,4 +413,3 @@ renderMenu()
 
 </body>
 </html>
-
