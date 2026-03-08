@@ -1,398 +1,413 @@
-<!DOCTYPE html>    <html lang="en">    
-<head>    
-<meta charset="UTF-8">    
-<meta name="viewport" content="width=device-width, initial-scale=1.0">    
-<title>Gamepay Hub</title>    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">    <style>    
-    
-*{    
-margin:0;    
-padding:0;    
-box-sizing:border-box;    
-font-family:Poppins,sans-serif;    
-}    
-    
-body{    
-background:linear-gradient(135deg,#041c40,#0b3d8c);    
-color:white;    
-min-height:100vh;    
-overflow-x:hidden;    
-}    
-    
-#particles-js{    
-position:fixed;    
-width:100%;    
-height:100%;    
-top:0;    
-left:0;    
-z-index:-1;    
-}    
-    
-.container{    
-max-width:1200px;    
-margin:auto;    
-padding:20px;    
-}    
-    
-.header{    
-text-align:center;    
-margin-bottom:25px;    
-}    
-    
-.header h1{    
-font-size:42px;    
-color:#ffd900;    
-text-shadow:0 0 12px #ffd900;    
-}    
-    
-.header p{    
-color:#bceaff;    
-}    
-    
-.grid{    
-display:grid;    
-grid-template-columns:repeat(auto-fit,minmax(160px,1fr));    
-gap:20px;    
-}    
-    
-.card{    
-background:#0c4ab3;    
-padding:25px;    
-border-radius:18px;    
-text-align:center;    
-cursor:pointer;    
-transition:.3s;    
-}    
-    
-.card:hover{    
-transform:translateY(-6px);    
-background:#1565d8;    
-}    
-    
-.card img{    
-width:60px;    
-margin-bottom:10px;    
-}    
-    
-.game-page{    
-display:none;    
-grid-template-columns:1.5fr 1fr;    
-gap:20px;    
-margin-top:20px;    
-}    
-    
-.panel{    
-background:#072a63;    
-padding:20px;    
-border-radius:18px;    
-}    
-    
-.preview img{    
-width:100%;    
-border-radius:12px;    
-margin-bottom:15px;    
-}    
-    
-.item{    
-display:flex;    
-justify-content:space-between;    
-align-items:center;    
-background:#1565d8;    
-padding:10px;    
-border-radius:10px;    
-margin-bottom:8px;    
-}    
-    
-.qty{    
-display:flex;    
-gap:6px;    
-align-items:center;    
-}    
-    
-.qty button{    
-background:#12d7ff;    
-border:none;    
-padding:4px 10px;    
-border-radius:6px;    
-cursor:pointer;    
-}    
-    
-textarea{    
-width:100%;    
-border:none;    
-border-radius:10px;    
-padding:10px;    
-margin-top:10px;    
-}    
-    
-.btn{    
-border:none;    
-padding:10px 14px;    
-border-radius:8px;    
-cursor:pointer;    
-font-weight:bold;    
-}    
-    
-.back{background:#12d7ff;color:#04204e}    
-.admin{background:#ffd900;color:black}    
-    
-.telegram{    
-width:100%;    
-margin-top:10px;    
-background:#12d7ff;    
-color:#04204e;    
-font-size:18px;    
-}    
-    
-.history{    
-margin-top:15px;    
-background:#0c4ab3;    
-padding:10px;    
-border-radius:10px;    
-max-height:200px;    
-overflow:auto;    
-}    
-    
-.footer{    
-text-align:center;    
-margin-top:30px;    
-color:#ffd900;    
-}    
-    
-</style>    </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Gamepay Hub</title>
 
-<body>    <div id="particles-js"></div>    <div class="container">    <div class="header">    
-<h1>Gamepay Hub</h1>    
-<p>Mobile Game Topup Store</p>    
-</div>    <div id="menu" class="grid"></div>    <div id="gamePage" class="game-page">    <div class="panel">    <div style="display:flex;justify-content:space-between">    
-<h2 id="gameTitle"></h2>    <div>    
-<button class="btn admin" onclick="adminLogin()">Admin</button>    
-<button class="btn back" onclick="backMenu()">Back</button>    
-</div>    
-</div>    <div class="preview">    
-<img id="gameImage">    
-</div>    <div id="items"></div>    </div>    <div class="panel">    <h3>Order Cart</h3>    <div id="cart"></div>    <div style="margin-top:10px">    
-Total: <span id="total">0</span> ks    
-</div>    <textarea id="account" placeholder="Game ID / Server / Name"></textarea>    <div style="margin-top:10px">    <label><input type="radio" name="pay" value="Kpay">Kpay</label>
-<label><input type="radio" name="pay" value="Wave">Wave</label>
-<label><input type="radio" name="pay" value="UAB">UAB</label>
-<label><input type="radio" name="pay" value="AyaPay">AyaPay</label>
-<label><input type="radio" name="pay" value="Binance">Binance</label>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 
-</div>    <input type="file" id="screenshot" style="margin-top:10px">    <button class="btn telegram" onclick="sendOrder()">Order via Telegram</button>
+<style>
 
-<div style="margin-top:10px">@angsthtun</div>    <div class="history">    
-<h4>Order History</h4>    
-<div id="history"></div>    
-</div>    </div>    </div>    <div class="footer">Founder: Diameter Eight</div>    </div>    
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>    <script>    
-    
-particlesJS("particles-js",{    
-particles:{    
-number:{value:80},    
-color:{value:"#00ffff"},    
-shape:{type:"circle"},    
-opacity:{value:0.5},    
-size:{value:3},    
-line_linked:{    
-enable:true,    
-distance:150,    
-color:"#00ffff",    
-opacity:0.3,    
-width:1    
-},    
-move:{    
-enable:true,    
-speed:2    
-}    
-}    
-})    
-    
-const TELEGRAM="angsthtun"    
-    
-let cart={}    
-let currentGame=""    
-    
-let data=JSON.parse(localStorage.getItem("gameData"))||{    
-    
-mlbb:{
- title:"Mobile Legends",
- icon:"ICON LINK",
- image:"IMAGE LINK",
- items:[
-   {name:"Weekly Pass",price:5700},
-   {name:"50 Diamonds",price:3100},
-   {name:"150 Diamonds",price:9000}
- ]
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
 }
-    
-}    
-    
-const menu=document.getElementById("menu")    
-    
-function renderMenu(){    
-    
-menu.innerHTML=""    
-    
-for(let k in data){    
-    
-let g=data[k]    
-    
-menu.innerHTML+=`    
-<div class="card" onclick="openGame('${k}')">    
-<img src="${g.icon}">    
-<div>${g.title}</div>    
-</div>    
-`    
-    
-}    
-    
-}    
-    
-function openGame(k){    
-    
-currentGame=k    
-    
-menu.style.display="none"    
-document.getElementById("gamePage").style.display="grid"    
-    
-let g=data[k]    
-    
-document.getElementById("gameTitle").textContent=g.title    
-document.getElementById("gameImage").src=g.image    
-    
-renderItems()    
-    
-}    
-    
-function backMenu(){    
-    
-menu.style.display="grid"    
-document.getElementById("gamePage").style.display="none"    
-    
-cart={}    
-updateCart()    
-    
-}    
-    
-function renderItems(){    
-    
-let box=document.getElementById("items")    
-box.innerHTML=""    
-    
-data[currentGame].items.forEach((item,i)=>{    
-    
-box.innerHTML+=`    
-<div class="item">    
-    
-<span>${item.name}</span>    
-    
-<div class="qty">    
-<button onclick="changeQty(${i},-1)">-</button>    
-<span id="q${i}">0</span>    
-<button onclick="changeQty(${i},1)">+</button>    
-</div>    
-    
-<span>${item.price}</span>    
-    
-</div>    
-`    
-    
-})    
-    
-}    
-    
-function changeQty(i,v){    
-    
-cart[i]=(cart[i]||0)+v    
-if(cart[i]<0)cart[i]=0    
-    
-document.getElementById("q"+i).textContent=cart[i]    
-    
-updateCart()    
-    
-}    
-    
-function updateCart(){    
-    
-let html=""    
-let total=0    
-    
-for(let i in cart){    
-    
-if(cart[i]>0){    
-    
-let item=data[currentGame].items[i]    
-let price=item.price*cart[i]    
-    
-total+=price    
-    
-html+=`<div>${item.name} x${cart[i]} - ${price}</div>`    
-    
-}    
-    
-}    
-    
-document.getElementById("cart").innerHTML=html    
-document.getElementById("total").textContent=total    
-    
-}    
-function sendOrder(){
 
- let msg = "Gamepay Hub Order\n"
+body{
+background:#020c1b;
+color:white;
+min-height:100vh;
+overflow-x:hidden;
+}
 
- msg += "Game: " + data[currentGame].title + "\n\n"
+#particles-js{
+position:fixed;
+width:100%;
+height:100%;
+top:0;
+left:0;
+z-index:-1;
+}
 
- for(let i in cart){
-  if(cart[i] > 0){
-   let item = data[currentGame].items[i]
-   msg += item.name + " x" + cart[i] + "\n"
-  }
- }
+.container{
+max-width:900px;
+margin:auto;
+padding:15px;
+}
 
- let account = document.getElementById("account").value
- msg += "\nAccount: " + account + "\n"
+.header{
+text-align:center;
+margin-bottom:25px;
+}
 
- msg += "\nTotal: " + document.getElementById("total").textContent + " ks\n"
+.header h1{
+font-size:34px;
+color:#00ffff;
+text-shadow:0 0 15px #00ffff;
+}
 
- let url = "https://t.me/" + TELEGRAM + "?text=" + encodeURIComponent(msg)
+.header p{
+color:#8bd9ff;
+}
 
- window.open(url)
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+}
 
-}    
-    
-msg+="\nAccount:\n"+document.getElementById("account").value    
-    
-window.open("https://t.me/"+TELEGRAM+"?text="+encodeURIComponent(msg))    
-    
-}    
-    
-function adminLogin(){    
-    
-let pass=prompt("Enter Admin Password")    
-    
-if(pass!=="aungshin12345xx"){    
-alert("Wrong password")    
-return    
-}    
-    
-let edit=prompt("Edit JSON",JSON.stringify(data,null,2))    
-    
-if(edit){    
-    
-data=JSON.parse(edit)    
-    
-localStorage.setItem("gameData",JSON.stringify(data))    
-    
-renderMenu()    
-    
-}    
-    
-}    
-    
-renderMenu()
+.card{
+background:#031b3f;
+padding:20px;
+border-radius:15px;
+text-align:center;
+cursor:pointer;
+border:1px solid #00ffff40;
+transition:.3s;
+}
 
+.card:hover{
+box-shadow:0 0 15px #00ffff;
+transform:translateY(-4px);
+}
+
+.card img{
+width:60px;
+margin-bottom:8px;
+}
+
+.game-page{
+display:none;
+margin-top:20px;
+}
+
+.panel{
+background:#021733;
+padding:15px;
+border-radius:15px;
+border:1px solid #00ffff30;
+margin-bottom:15px;
+}
+
+.preview img{
+width:100%;
+border-radius:10px;
+margin-bottom:10px;
+}
+
+.item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#06306d;
+padding:10px;
+border-radius:8px;
+margin-bottom:8px;
+}
+
+.qty button{
+background:#00ffff;
+border:none;
+padding:4px 10px;
+border-radius:6px;
+cursor:pointer;
+font-weight:bold;
+}
+
+textarea{
+width:100%;
+border:none;
+border-radius:8px;
+padding:10px;
+margin-top:10px;
+}
+
+.btn{
+border:none;
+padding:10px;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.telegram{
+width:100%;
+margin-top:10px;
+background:#00ffff;
+color:#021733;
+font-size:18px;
+box-shadow:0 0 10px #00ffff;
+}
+
+.footer{
+text-align:center;
+margin-top:25px;
+color:#00ffff;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="particles-js"></div>
+
+<div class="container">
+
+<div class="header">
+<h1>Gamepay Hub</h1>
+<p>Mobile Game Topup Store</p>
+</div>
+
+<div id="menu" class="grid"></div>
+
+<div id="gamePage" class="game-page">
+
+<div class="panel">
+
+<h2 id="gameTitle"></h2>
+
+<div class="preview">
+<img id="gameImage">
+</div>
+
+<div id="items"></div>
+
+</div>
+
+<div class="panel">
+
+<h3>Order Cart</h3>
+
+<div id="cart"></div>
+
+<div style="margin-top:10px">
+Total: <span id="total">0</span> ks
+</div>
+
+<textarea id="account" placeholder="Game ID / Server / Name"></textarea>
+
+<button class="btn telegram" onclick="sendOrder()">Order via Telegram</button>
+
+<div id="history"></div>
+
+</div>
+
+<button class="btn" onclick="backMenu()">Back</button>
+
+</div>
+
+<div class="footer">
+Founder: Diameter Eight
+</div>
+
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+<script>
+
+particlesJS("particles-js",{
+particles:{
+number:{value:80},
+color:{value:"#00ffff"},
+shape:{type:"circle"},
+opacity:{value:0.5},
+size:{value:3},
+line_linked:{
+enable:true,
+distance:150,
+color:"#00ffff",
+opacity:0.4,
+width:1
+},
+move:{
+enable:true,
+speed:2
+}
+}
+})
 
 </script>
+    <script>
+
+const TELEGRAM="angsthtun"
+
+let cart={}
+let currentGame=""
+
+let data={
+
+mlbb:{
+title:"Mobile Legends",
+icon:"https://seeklogo.com/images/M/mobile-legends-logo.png",
+image:"https://images8.alphacoders.com/136/1364527.jpeg",
+items:[
+{name:"Weekly Pass",price:5700},
+{name:"50 Diamonds",price:3100},
+{name:"150 Diamonds",price:9000}
+]
+}
+
+}
+
+const menu=document.getElementById("menu")
+
+function renderMenu(){
+
+menu.innerHTML=""
+
+for(let k in data){
+
+let g=data[k]
+
+menu.innerHTML+=`
+
+<div class="card" onclick="openGame('${k}')">
+
+<img src="${g.icon}" onerror="this.src='https://via.placeholder.com/60'">
+
+<div>${g.title}</div>
+
+</div>
+
+`
+
+}
+
+}
+
+function openGame(k){
+
+currentGame=k
+
+menu.style.display="none"
+document.getElementById("gamePage").style.display="block"
+
+let g=data[k]
+
+document.getElementById("gameTitle").textContent=g.title
+document.getElementById("gameImage").src=g.image
+
+renderItems()
+
+}
+
+function backMenu(){
+
+menu.style.display="grid"
+document.getElementById("gamePage").style.display="none"
+
+cart={}
+updateCart()
+
+}
+
+function renderItems(){
+
+let box=document.getElementById("items")
+box.innerHTML=""
+
+data[currentGame].items.forEach((item,i)=>{
+
+box.innerHTML+=`
+
+<div class="item">
+
+<span>${item.name}</span>
+
+<div class="qty">
+
+<button onclick="changeQty(${i},-1)">-</button>
+
+<span id="q${i}">0</span>
+
+<button onclick="changeQty(${i},1)">+</button>
+
+</div>
+
+<span>${item.price}</span>
+
+</div>
+
+`
+
+})
+
+}
+
+function changeQty(i,v){
+
+cart[i]=(cart[i]||0)+v
+if(cart[i]<0)cart[i]=0
+
+document.getElementById("q"+i).textContent=cart[i]
+
+updateCart()
+
+}
+
+function updateCart(){
+
+let html=""
+let total=0
+
+for(let i in cart){
+
+if(cart[i]>0){
+
+let item=data[currentGame].items[i]
+let price=item.price*cart[i]
+
+total+=price
+
+html+=`${item.name} x${cart[i]} - ${price} ks<br>`
+
+}
+
+}
+
+document.getElementById("cart").innerHTML=html
+document.getElementById("total").textContent=total
+
+}
+
+function sendOrder(){
+
+let msg="Gamepay Hub Order\n\n"
+
+msg+="Game: "+data[currentGame].title+"\n\n"
+
+for(let i in cart){
+
+if(cart[i]>0){
+
+let item=data[currentGame].items[i]
+
+msg+=item.name+" x"+cart[i]+"\n"
+
+}
+
+}
+
+let account=document.getElementById("account").value
+
+msg+="\nAccount: "+account+"\n"
+
+msg+="\nTotal: "+document.getElementById("total").textContent+" ks\n"
+
+navigator.clipboard.writeText(msg)
+
+window.open("https://t.me/"+TELEGRAM+"?text="+encodeURIComponent(msg))
+
+}
+
+renderMenu()
+
+</script>
+
 </body>
 </html>
 
