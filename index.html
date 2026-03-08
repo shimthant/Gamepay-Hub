@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gamepay Hub</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
@@ -19,7 +19,6 @@ font-family:Poppins,sans-serif;
 body{
 background:#020c1b;
 color:white;
-min-height:100vh;
 overflow-x:hidden;
 }
 
@@ -44,9 +43,13 @@ margin-bottom:25px;
 }
 
 .header h1{
-font-size:34px;
+font-size:36px;
 color:#00ffff;
 text-shadow:0 0 20px #00ffff;
+}
+
+.header p{
+color:#9fdfff;
 }
 
 .grid{
@@ -56,29 +59,31 @@ gap:15px;
 }
 
 .card{
-background:#031b3f;
+background:#041c40;
 padding:20px;
 border-radius:15px;
 text-align:center;
 cursor:pointer;
 border:1px solid #00ffff40;
+transition:.3s;
 }
 
 .card:hover{
+transform:translateY(-6px);
 box-shadow:0 0 20px #00ffff;
 }
 
 .card img{
 width:60px;
-margin-bottom:8px;
+margin-bottom:10px;
 }
 
 .panel{
 background:#021733;
 padding:15px;
-border-radius:15px;
-border:1px solid #00ffff30;
+border-radius:12px;
 margin-bottom:15px;
+border:1px solid #00ffff30;
 }
 
 .item{
@@ -108,36 +113,41 @@ margin-top:10px;
 
 .telegram{
 width:100%;
-margin-top:10px;
+margin-top:12px;
 background:#00ffff;
 color:#021733;
-padding:10px;
+padding:12px;
 border:none;
 border-radius:8px;
-font-size:16px;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+animation:glow 2s infinite alternate;
 }
 
-.qrpopup{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:#000000cc;
-display:none;
-justify-content:center;
-align-items:center;
+@keyframes glow{
+from{box-shadow:0 0 10px #00ffff;}
+to{box-shadow:0 0 25px #00ffff;}
 }
 
-.qrbox{
-background:#021733;
-padding:20px;
-border-radius:12px;
+.payments{
+margin-top:10px;
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.payments label{
+background:#06306d;
+padding:6px 10px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.footer{
 text-align:center;
-}
-
-.qrbox img{
-width:200px;
+margin-top:20px;
+color:#00ffff;
 }
 
 </style>
@@ -174,11 +184,13 @@ width:200px;
 
 <div id="cart"></div>
 
+<div style="margin-top:8px">
 Total Amount: <span id="total">0</span> ks
+</div>
 
 <textarea id="account" placeholder="Game ID / Server / Name"></textarea>
 
-<div>
+<div class="payments">
 
 <label><input type="radio" name="pay" value="Kpay">Kpay</label>
 <label><input type="radio" name="pay" value="Wave">Wave</label>
@@ -189,7 +201,7 @@ Total Amount: <span id="total">0</span> ks
 
 </div>
 
-<button class="telegram" onclick="sendOrder()">Order via Telegram</button>
+<button class="telegram" onclick="sendOrder()">🚀 Order via Telegram</button>
 
 </div>
 
@@ -197,27 +209,24 @@ Total Amount: <span id="total">0</span> ks
 
 </div>
 
+<div class="footer">
+Founder : Diameter Eight
 </div>
 
-<div id="qrpopup" class="qrpopup">
-<div class="qrbox">
-<h3>Scan To Pay</h3>
-<img id="qrimg">
-<br><br>
-<button onclick="closeQR()">Close</button>
 </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
 <script>
 
 particlesJS("particles-js",{
+
 particles:{
 number:{value:80},
 color:{value:"#00ffff"},
 shape:{type:"circle"},
 opacity:{value:0.5},
 size:{value:3},
+
 line_linked:{
 enable:true,
 distance:150,
@@ -225,29 +234,23 @@ color:"#00ffff",
 opacity:0.4,
 width:1
 },
+
 move:{
 enable:true,
 speed:2
 }
+
 }
+
 })
 
 </script>
-<script>
+  <script>
 
 const TELEGRAM="angsthtun"
 
 let cart={}
 let currentGame=""
-
-let qrImages={
-"Kpay":"kpay.png",
-"Wave":"wave.png",
-"UAB":"uab.png",
-"Binance":"binance.png",
-"AyaPay":"aya.png",
-"WeChat Pay":"wechat.png"
-}
 
 let data={
 
@@ -255,11 +258,13 @@ mlbb:{
 title:"Mobile Legends",
 icon:"https://seeklogo.com/images/M/mobile-legends-logo.png",
 image:"https://images8.alphacoders.com/136/1364527.jpeg",
+
 items:[
 {name:"Weekly Pass",price:5700},
 {name:"50 Diamonds",price:3100},
 {name:"150 Diamonds",price:9000}
 ]
+
 }
 
 }
@@ -275,10 +280,15 @@ for(let k in data){
 let g=data[k]
 
 menu.innerHTML+=`
+
 <div class="card" onclick="openGame('${k}')">
+
 <img src="${g.icon}" onerror="this.src='https://via.placeholder.com/60'">
+
 <div>${g.title}</div>
+
 </div>
+
 `
 
 }
@@ -288,7 +298,6 @@ menu.innerHTML+=`
 function openGame(k){
 
 currentGame=k
-
 menu.style.display="none"
 document.getElementById("gamePage").style.display="block"
 
@@ -327,7 +336,9 @@ box.innerHTML+=`
 <div class="qty">
 
 <button onclick="changeQty(${i},-1)">-</button>
+
 <span id="q${i}">0</span>
+
 <button onclick="changeQty(${i},1)">+</button>
 
 </div>
@@ -405,25 +416,16 @@ msg+="\nAccount: "+account+"\n"
 let pay=document.querySelector('input[name="pay"]:checked')
 
 if(pay){
-
 msg+="Payment: "+pay.value+"\n"
-
-document.getElementById("qrimg").src=qrImages[pay.value]
-document.getElementById("qrpopup").style.display="flex"
-
 }
 
-msg+="\nTotal Amount: "+document.getElementById("total").textContent+" ks\n"
+let total=document.getElementById("total").textContent
+
+msg+="\nTotal Amount: "+total+" ks\n"
 
 navigator.clipboard.writeText(msg)
 
 window.open("https://t.me/"+TELEGRAM+"?text="+encodeURIComponent(msg))
-
-}
-
-function closeQR(){
-
-document.getElementById("qrpopup").style.display="none"
 
 }
 
