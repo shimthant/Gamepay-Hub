@@ -337,21 +337,33 @@ document.getElementById("total").textContent=total
     
 }    
     
-function sendOrder(){    
-    
-let msg="Gamepay Hub Order\n\n"    
-    
-msg+="Game: "+data[currentGame].title+"\n\n"    
-    
-for(let i in cart){    
-    
-if(cart[i]>0){    
-    
-let item=data[currentGame].items[i]    
-    
-msg+=item.name+" x"+cart[i]+"\n"    
-    
-}    
+function sendOrder(){
+
+ let msg = "Gamepay Hub Order\n"
+
+ msg += "Game: " + data[currentGame].title + "\n\n"
+
+ for(let i in cart){
+  if(cart[i] > 0){
+   let item = data[currentGame].items[i]
+   msg += item.name + " x" + cart[i] + "\n"
+  }
+ }
+
+ let account = document.getElementById("account").value
+ msg += "\nAccount: " + account + "\n"
+
+ msg += "\nTotal: " + total + " ks\n"
+
+ if(screenshotFile){
+  msg += "\nScreenshot: Attached\n"
+ }
+
+ let url = "https://t.me/" + TELEGRAM + "?text=" + encodeURIComponent(msg)
+
+ window.open(url)
+
+}
     
 }    
     
@@ -384,10 +396,16 @@ renderMenu()
     
 }    
     
-renderMenu()    
-  const preview = document.getElementById("preview")
+renderMenu()
+
+const screenshotInput = document.getElementById("screenshot")
+const preview = document.getElementById("preview")
+
+let screenshotFile = null
 
 screenshotInput.addEventListener("change",function(){
+
+ screenshotFile = this.files[0]
 
  const file = this.files[0]
 
@@ -403,6 +421,6 @@ screenshotInput.addEventListener("change",function(){
 
  }
 
-})  
+})
 </script>    </body>    
 </html>
