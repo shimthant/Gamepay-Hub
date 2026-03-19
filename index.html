@@ -1,482 +1,215 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gamepay Hub</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Poppins,sans-serif;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PayHub Knowledge</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0a0a0a;
+      color: #eaeaea;
+    }h1 {
+  text-align: center;
+  padding: 20px;
+  color: #00e6e6;
+  text-shadow: 0 0 6px #00e6e6;
 }
 
-body{
-background:#020c1b;
-color:white;
-overflow-x:hidden;
+.search-box {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
 }
 
-#particles-js{
-position:fixed;
-width:100%;
-height:100%;
-top:0;
-left:0;
-z-index:-1;
+.search-box input {
+  width: 80%;
+  max-width: 400px;
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid #00e6e6;
+  outline: none;
+  box-shadow: 0 0 8px rgba(0,230,230,0.5);
 }
 
-.container{
-max-width:900px;
-margin:auto;
-padding:15px;
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
 }
 
-.header{
-text-align:center;
-margin-bottom:25px;
+.box {
+  background: #111;
+  border: 1px solid #00e6e6;
+  border-radius: 15px;
+  padding: 20px;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 0 8px rgba(0,230,230,0.5);
+  transition: 0.3s;
 }
 
-.header h1{
-font-size:36px;
-color:#00ffff;
-text-shadow:0 0 20px #00ffff;
+.box:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(0,230,230,0.7);
 }
 
-.header p{
-color:#9fdfff;
+.category {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #555;
 }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:15px;
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
 }
 
-.card{
-background:#041c40;
-padding:20px;
-border-radius:15px;
-text-align:center;
-cursor:pointer;
-border:1px solid #00ffff40;
-transition:.3s;
+.modal-content {
+  background: #111;
+  width: 90%;
+  max-width: 600px;
+  height: 75%;
+  border-radius: 15px;
+  padding: 20px;
+  overflow-y: auto;
+  box-shadow: 0 0 12px rgba(0,230,230,0.7);
 }
 
-.card:hover{
-transform:translateY(-6px);
-box-shadow:0 0 20px #00ffff;
+.close {
+  float: right;
+  cursor: pointer;
+  font-size: 20px;
+  color: red;
 }
 
-.card img{
-width:60px;
-margin-bottom:10px;
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;600&display=swap');
+
+body {
+  font-family: 'Noto Sans Myanmar', Arial, sans-serif;
 }
 
-.panel{
-background:#021733;
-padding:15px;
-border-radius:12px;
-margin-bottom:15px;
-border:1px solid #00ffff30;
+.box {
+  animation: fadeIn 0.6s ease;
 }
 
-.item{
-display:flex;
-justify-content:space-between;
-background:#06306d;
-padding:10px;
-border-radius:8px;
-margin-bottom:8px;
+@keyframes fadeIn {
+  from {opacity:0; transform: translateY(10px);} 
+  to {opacity:1; transform: translateY(0);} 
 }
 
-.qty button{
-background:#00ffff;
-border:none;
-padding:4px 10px;
-border-radius:6px;
-cursor:pointer;
+.modal-content {
+  animation: popUp 0.3s ease;
 }
 
-textarea{
-width:100%;
-border:none;
-border-radius:8px;
-padding:10px;
-margin-top:10px;
+@keyframes popUp {
+  from {transform: scale(0.8); opacity:0;} 
+  to {transform: scale(1); opacity:1;} 
 }
 
-.telegram{
-width:100%;
-margin-top:12px;
-background:#00ffff;
-color:#021733;
-padding:12px;
-border:none;
-border-radius:8px;
-font-size:18px;
-font-weight:bold;
-cursor:pointer;
-animation:glow 2s infinite alternate;
-}
-
-@keyframes glow{
-from{box-shadow:0 0 10px #00ffff;}
-to{box-shadow:0 0 25px #00ffff;}
-}
-
-.payments{
-margin-top:10px;
-display:flex;
-flex-wrap:wrap;
-gap:10px;
-}
-
-.payments label{
-background:#06306d;
-padding:6px 10px;
-border-radius:6px;
-cursor:pointer;
-}
-
-.footer{
-text-align:center;
-margin-top:20px;
-color:#00ffff;
-}
-
-</style>
+  </style>
 </head>
-
-<body>
-
-<div id="particles-js"></div>
-
-<div class="container">
-
-<div class="header">
-<h1>Gamepay Hub</h1>
-<p>Mobile Game Topup Store</p>
+<body>  <h1>PayHub Knowledge</h1>  <div class="search-box">
+    <input type="text" id="search" placeholder="Search knowledge..." onkeyup="filterBoxes()">
+  </div>  <div class="grid" id="grid">
+    <div class="box" data-title="Game Guide" onclick="openModal('content1')">
+      Game Guide
+      <div class="category">Guide</div>
+    </div><div class="box" data-title="Knowledge Sharing" onclick="openModal('content2')">
+  Knowledge Sharing
+  <div class="category">Info</div>
 </div>
 
-<div id="menu" class="grid"></div>
-
-<div id="gamePage" style="display:none">
-
-<div class="panel">
-
-<h2 id="gameTitle"></h2>
-
-<img id="gameImage" style="width:100%;border-radius:10px">
-
-<div id="items"></div>
-
+<div class="box" data-title="Tips & Tricks" onclick="openModal('content3')">
+  Tips & Tricks
+  <div class="category">Tips</div>
+    <div class="box" data-title="Game Accounts" onclick="openModal('content4')">
+  Game Accounts
+  <div class="category">Account</div>
 </div>
 
-<div class="panel">
-
-<h3>Order Cart</h3>
-
-<div id="cart"></div>
-
-<div style="margin-top:8px">
-Total Amount: <span id="total">0</span> ks
+<div class="box" data-title="Security Tips" onclick="openModal('content5')">
+  Security Tips
+  <div class="category">Security</div>
 </div>
 
-<textarea id="account" placeholder="Game ID / Server / Name"></textarea>
-
-<div class="payments">
-
-<label><input type="radio" name="pay" value="Kpay">Kpay</label>
-<label><input type="radio" name="pay" value="Wave">Wave</label>
-<label><input type="radio" name="pay" value="UAB">UAB</label>
-<label><input type="radio" name="pay" value="Binance">Binance</label>
-<label><input type="radio" name="pay" value="AyaPay">AyaPay</label>
-<label><input type="radio" name="pay" value="WeChat Pay">WeChat</label>
-
-</div>
-
-<button class="telegram" onclick="sendOrder()">🚀 Order via Telegram</button>
-
-</div>
-
-<button onclick="backMenu()">Back</button>
-
-</div>
-
-<div class="footer">
-Founder : Diameter Eight
-</div>
-
-</div>
-  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-
-<script>
-
-particlesJS("particles-js",{
-
-particles:{
-number:{value:80},
-color:{value:"#00ffff"},
-shape:{type:"circle"},
-opacity:{value:0.5},
-size:{value:3},
-
-line_linked:{
-enable:true,
-distance:150,
-color:"#00ffff",
-opacity:0.4,
-width:1
-},
-
-move:{
-enable:true,
-speed:2
-}
-
-}
-
-})
-
-</script>
-  <script>
-
-const TELEGRAM="angsthtun"
-
-let cart={}
-let currentGame=""
-
-let data={
-
-mlbb:{
-title:"Mobile Legends",
-icon:"images/mlbb.png",
- image:"images/mlbb.png",
-items:[
-{name:"Weekly Pass",price:5700},
-{name:"50 Diamonds",price:3100},
-{name:"150 Diamonds",price:9000}
-]
-  },
-genshin:{
-    title:"Genshin Impact",
-    icon:"https://upload.wikimedia.org/wikipedia/en/6/6d/Honkai_Star_Rail_logo.png",
-    image:"https://images6.alphacoders.com/131/1318293.jpeg",
-    items:[
-      {name:"Blessing",price:13800},
-      {name:"60 Genesis Crystal",price:2750},
-      {name:"300+30 Genesis Crystal",price:13800},
-      {name:"980+110 Genesis Crystal",price:42000},
-      {name:"1980+260 Genesis Crystal",price:87250},
-      {name:"3280+600 Genesis Crystal",price:143000},
-      {name:"6480+1600 Genesis Crystal",price:273000}
-    ]
-  },
-
-  starrail:{
-    title:"Honkai: Star Rail",
-    icon:"https://upload.wikimedia.org/wikipedia/en/6/6d/Honkai_Star_Rail_logo.png",
-    image:"https://images6.alphacoders.com/131/1318293.jpeg",
-    items:[
-      {name:"60 Oneiric Shard",price:2800},
-      {name:"330 Oneiric Shard",price:14000},
-      {name:"1090 Oneiric Shard",price:42500},
-      {name:"2240 Oneiric Shard",price:84800},
-      {name:"3880 Oneiric Shard",price:144800},
-      {name:"8080 Oneiric Shard",price:272800},
-      {name:"Express Supply Pass",price:13800}
-    ]
-  },
-
-  arena:{
-    title:"Arena Breakout",
-    icon:"https://seeklogo.com/images/A/arena-breakout-logo.png",
-    image:"https://images5.alphacoders.com/131/1316943.jpeg",
-    items:[
-      {name:"66 Bonds",price:3500},
-      {name:"335 Bonds",price:17600},
-      {name:"675 Bonds",price:35000},
-      {name:"1690 Bonds",price:85600},
-      {name:"3400 Bonds",price:171200},
-      {name:"6820 Bonds",price:329500},
-      {name:"Beginner Select",price:2700},
-      {name:"Bulletproof Case (30D)",price:8000},
-      {name:"Composite Case (30D)",price:24100},
-      {name:"Advanced Battle Pass",price:13700},
-      {name:"Premium Battle Pass",price:40000}
-    ]
-  }
-}
-
-const menu=document.getElementById("menu")
-
-function renderMenu(){
-
-menu.innerHTML=""
-
-for(let k in data){
-
-let g=data[k]
-
-menu.innerHTML+=`
-
-<div class="card" onclick="openGame('${k}')">
-
-<img src="${g.icon}" onerror="this.src='https://via.placeholder.com/60'">
-
-<div>${g.title}</div>
-
-</div>
-
-`
-
-}
-
-}
-
-function openGame(k){
-
-currentGame=k
-menu.style.display="none"
-document.getElementById("gamePage").style.display="block"
-
-let g=data[k]
-
-document.getElementById("gameTitle").textContent=g.title
-document.getElementById("gameImage").src=g.image
-
-renderItems()
-
-}
-
-function backMenu(){
-
-menu.style.display="grid"
-document.getElementById("gamePage").style.display="none"
-
-cart={}
-updateCart()
-
-}
-
-function renderItems(){
-
-let box=document.getElementById("items")
-box.innerHTML=""
-
-data[currentGame].items.forEach((item,i)=>{
-
-box.innerHTML+=`
-
-<div class="item">
-
-<span>${item.name}</span>
-
-<div class="qty">
-
-<button onclick="changeQty(${i},-1)">-</button>
-
-<span id="q${i}">0</span>
-
-<button onclick="changeQty(${i},1)">+</button>
-
-</div>
-
-<span>${item.price}</span>
-
-</div>
-
-`
-
-})
-
-}
-
-function changeQty(i,v){
-
-cart[i]=(cart[i]||0)+v
-if(cart[i]<0)cart[i]=0
-
-document.getElementById("q"+i).textContent=cart[i]
-
-updateCart()
-
-}
-
-function updateCart(){
-
-let html=""
-let total=0
-
-for(let i in cart){
-
-if(cart[i]>0){
-
-let item=data[currentGame].items[i]
-let price=item.price*cart[i]
-
-total+=price
-
-html+=`${item.name} x${cart[i]} - ${price} ks<br>`
-
-}
-
-}
-
-document.getElementById("cart").innerHTML=html
-document.getElementById("total").textContent=total
-
-}
-
-function sendOrder(){
-
-let msg="Gamepay Hub Order\n\n"
-
-msg+="Game: "+data[currentGame].title+"\n\n"
-
-msg+="Selective Items:\n"
-
-for(let i in cart){
-
-if(cart[i]>0){
-
-let item=data[currentGame].items[i]
-
-msg+=item.name+" x"+cart[i]+"\n"
-
-}
-
-}
-
-let account=document.getElementById("account").value
-
-msg+="\nAccount: "+account+"\n"
-
-let pay=document.querySelector('input[name="pay"]:checked')
-
-if(pay){
-msg+="Payment: "+pay.value+"\n"
-}
-
-let total=document.getElementById("total").textContent
-
-msg+="\nTotal Amount: "+total+" ks\n"
-
-navigator.clipboard.writeText(msg)
-
-window.open("https://t.me/"+TELEGRAM+"?text="+encodeURIComponent(msg))
-
-}
-
-renderMenu()
-
-</script>
-
-</body>
+  </div>  <!-- Modal -->  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <div id="modal-text"></div>
+    </div>
+  </div>  <script>
+    const contents = {
+      content4: `
+        <h2>Game Accounts</h2>
+        <p>
+        Game account အမျိုးအစားတွေ၊ အသုံးပြုနည်းတွေကို ဒီမှာဖတ်ရှုနိုင်ပါတယ်။
+        </p>
+      `,
+      content5: `
+        <h2>Security Tips</h2>
+        <p>
+        Account လုံခြုံရေးအတွက် password များကို မျှဝေမထားပါနှင့်။
+        </p>
+      `,
+      content1: `
+        <h2>Game Guide</h2>
+        <p>This is a detailed game guide. Scroll to read more.<br><br>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br><br>
+        More guide content here...<br><br>
+        Strategy, leveling tips, gameplay instructions.
+        </p>
+      `,
+      content2: `
+        <h2>Knowledge Sharing</h2>
+        <p>
+        Shareနဲ့ Private ဘာကွာလဲဆိုရင် —<br><br>
+        Share က အများနဲ့သုံးရတာပါ။<br><br>
+        Private က mail အသစ် သီးသန့်တခု ပေးမှာပါ။<br><br>
+        Own mail က ကိုယ်ပိုင် mail နဲ့ ရမှာပါ။
+        </p>
+      `,
+      content3: `
+        <h2>Tips & Tricks</h2>
+        <p>Helpful tips to improve your gameplay.<br><br>
+        Hidden tricks, shortcuts, and pro strategies.
+        </p>
+      `
+    };
+
+    function openModal(key) {
+      document.getElementById('modal-text').innerHTML = contents[key];
+      document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    window.onclick = function(e) {
+      if (e.target === document.getElementById('modal')) {
+        closeModal();
+      }
+    }
+
+    function filterBoxes() {
+      const input = document.getElementById('search').value.toLowerCase();
+      const boxes = document.querySelectorAll('.box');
+
+      boxes.forEach(box => {
+        const title = box.getAttribute('data-title').toLowerCase();
+        box.style.display = title.includes(input) ? 'block' : 'none';
+      });
+    }
+  </script></body>
 </html>
