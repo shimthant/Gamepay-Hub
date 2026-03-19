@@ -7,8 +7,8 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #0a0a0a;
-      color: #eaeaea;
+      background: #ffffff;
+      color: #111;
     }h1 {
   text-align: center;
   padding: 20px;
@@ -29,7 +29,7 @@
   border-radius: 20px;
   border: 1px solid #00e6e6;
   outline: none;
-  box-shadow: 0 0 8px rgba(0,230,230,0.5);
+  box-shadow: 0 0 10px rgba(0,230,230,0.4);
 }
 
 .grid {
@@ -40,19 +40,19 @@
 }
 
 .box {
-  background: #111;
+  background: #ffffff;
   border: 1px solid #00e6e6;
   border-radius: 15px;
   padding: 20px;
   cursor: pointer;
   text-align: center;
-  box-shadow: 0 0 8px rgba(0,230,230,0.5);
+  box-shadow: 0 0 10px rgba(0,230,230,0.4);
   transition: 0.3s;
 }
 
 .box:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 12px rgba(0,230,230,0.7);
+  box-shadow: 0 0 15px rgba(0,230,230,0.6);
 }
 
 .category {
@@ -76,14 +76,14 @@
 }
 
 .modal-content {
-  background: #111;
+  background: #ffffff;
   width: 90%;
   max-width: 600px;
   height: 75%;
   border-radius: 15px;
   padding: 20px;
   overflow-y: auto;
-  box-shadow: 0 0 12px rgba(0,230,230,0.7);
+  box-shadow: 0 0 15px rgba(0,230,230,0.6);
 }
 
 .close {
@@ -115,6 +115,31 @@ body {
 @keyframes popUp {
   from {transform: scale(0.8); opacity:0;} 
   to {transform: scale(1); opacity:1;} 
+}
+
+.box {
+  backdrop-filter: blur(8px);
+  background: rgba(255,255,255,0.7);
+  border: 1px solid rgba(0,230,230,0.6);
+}
+
+.box:hover {
+  transform: translateY(-5px) scale(1.03);
+}
+
+.category {
+  font-weight: bold;
+  color: #00b3b3;
+}
+
+/* Smooth scroll inside modal */
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: #00e6e6;
+  border-radius: 10px;
 }
 
   </style>
