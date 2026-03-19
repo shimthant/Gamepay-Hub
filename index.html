@@ -2,214 +2,163 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PayHub Knowledge</title>
-  <style>
+  <title>PayHub Knowledge</title>  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+Myanmar:wght@400;600&display=swap" rel="stylesheet">  <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Inter','Noto Sans Myanmar', sans-serif;
+      background: #f7f9fc;
+      color: #1a1a1a;
+      display: flex;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
       background: #ffffff;
-      color: #111;
-    }h1 {
-  text-align: center;
-  padding: 20px;
-  color: #00e6e6;
-  text-shadow: 0 0 6px #00e6e6;
-}
+      height: 100vh;
+      padding: 20px;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+    }
 
-.search-box {
-  display: flex;
-  justify-content: center;
-  padding: 10px;
-}
+    .sidebar h2 {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
 
-.search-box input {
-  width: 80%;
-  max-width: 400px;
-  padding: 10px;
-  border-radius: 20px;
-  border: 1px solid #00e6e6;
-  outline: none;
-  box-shadow: 0 0 10px rgba(0,230,230,0.4);
-}
+    .menu-item {
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  padding: 20px;
-}
+    .menu-item:hover {
+      background: #f0f3f7;
+    }
 
-.box {
-  background: #ffffff;
-  border: 1px solid #00e6e6;
-  border-radius: 15px;
-  padding: 20px;
-  cursor: pointer;
-  text-align: center;
-  box-shadow: 0 0 10px rgba(0,230,230,0.4);
-  transition: 0.3s;
-}
+    /* Main */
+    .main {
+      flex: 1;
+      padding: 20px;
+    }
 
-.box:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(0,230,230,0.6);
-}
+    .search-box {
+      margin-bottom: 20px;
+    }
 
-.category {
-  text-align: center;
-  margin-top: 10px;
-  font-size: 14px;
-  color: #555;
-}
+    .search-box input {
+      width: 100%;
+      max-width: 400px;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+    }
 
-/* Modal */
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
-  justify-content: center;
-  align-items: center;
-}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
 
-.modal-content {
-  background: #ffffff;
-  width: 90%;
-  max-width: 600px;
-  height: 75%;
-  border-radius: 15px;
-  padding: 20px;
-  overflow-y: auto;
-  box-shadow: 0 0 15px rgba(0,230,230,0.6);
-}
+    .box {
+      background: #fff;
+      border-radius: 14px;
+      padding: 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      transition: 0.2s;
+    }
 
-.close {
-  float: right;
-  cursor: pointer;
-  font-size: 20px;
-  color: red;
-}
+    .box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    }
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;600&display=swap');
+    .title {
+      font-weight: 600;
+    }
 
-body {
-  font-family: 'Noto Sans Myanmar', Arial, sans-serif;
-}
+    .category {
+      font-size: 13px;
+      color: #777;
+    }
 
-.box {
-  animation: fadeIn 0.6s ease;
-}
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      justify-content: center;
+      align-items: center;
+    }
 
-@keyframes fadeIn {
-  from {opacity:0; transform: translateY(10px);} 
-  to {opacity:1; transform: translateY(0);} 
-}
+    .modal-content {
+      background: #fff;
+      width: 90%;
+      max-width: 600px;
+      height: 75%;
+      border-radius: 14px;
+      padding: 20px;
+      overflow-y: auto;
+    }
 
-.modal-content {
-  animation: popUp 0.3s ease;
-}
+    .close {
+      float: right;
+      cursor: pointer;
+      font-size: 20px;
+    }
 
-@keyframes popUp {
-  from {transform: scale(0.8); opacity:0;} 
-  to {transform: scale(1); opacity:1;} 
-}
-
-.box {
-  backdrop-filter: blur(8px);
-  background: rgba(255,255,255,0.7);
-  border: 1px solid rgba(0,230,230,0.6);
-}
-
-.box:hover {
-  transform: translateY(-5px) scale(1.03);
-}
-
-.category {
-  font-weight: bold;
-  color: #00b3b3;
-}
-
-/* Smooth scroll inside modal */
-.modal-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.modal-content::-webkit-scrollbar-thumb {
-  background: #00e6e6;
-  border-radius: 10px;
-}
-
-  </style>
-</head>
-<body>  <h1>PayHub Knowledge</h1>  <div class="search-box">
-    <input type="text" id="search" placeholder="Search knowledge..." onkeyup="filterBoxes()">
-  </div>  <div class="grid" id="grid">
-    <div class="box" data-title="Game Guide" onclick="openModal('content1')">
-      Game Guide
-      <div class="category">Guide</div>
-    </div><div class="box" data-title="Knowledge Sharing" onclick="openModal('content2')">
-  Knowledge Sharing
-  <div class="category">Info</div>
+  </style></head>
+<body>  <div class="sidebar">
+    <h2>PayHub</h2>
+    <div class="menu-item">All</div>
+    <div class="menu-item">Guide</div>
+    <div class="menu-item">Tips</div>
+    <div class="menu-item">Info</div>
+  </div>  <div class="main"><div class="search-box">
+  <input type="text" id="search" placeholder="Search..." onkeyup="filterBoxes()">
 </div>
 
-<div class="box" data-title="Tips & Tricks" onclick="openModal('content3')">
-  Tips & Tricks
-  <div class="category">Tips</div>
-    <div class="box" data-title="Game Accounts" onclick="openModal('content4')">
-  Game Accounts
-  <div class="category">Account</div>
+<div class="grid">
+
+  <div class="box" data-title="Game Guide" onclick="openModal('content1')">
+    <div class="title">Game Guide</div>
+    <div class="category">Guide</div>
+  </div>
+
+  <div class="box" data-title="Knowledge Sharing" onclick="openModal('content2')">
+    <div class="title">Knowledge Sharing</div>
+    <div class="category">Info</div>
+  </div>
+
+  <div class="box" data-title="Tips & Tricks" onclick="openModal('content3')">
+    <div class="title">Tips & Tricks</div>
+    <div class="category">Tips</div>
+  </div>
+
 </div>
 
-<div class="box" data-title="Security Tips" onclick="openModal('content5')">
-  Security Tips
-  <div class="category">Security</div>
-</div>
-
-  </div>  <!-- Modal -->  <div id="modal" class="modal">
+  </div>  <div id="modal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal()">&times;</span>
       <div id="modal-text"></div>
     </div>
   </div>  <script>
     const contents = {
-      content4: `
-        <h2>Game Accounts</h2>
-        <p>
-        Game account အမျိုးအစားတွေ၊ အသုံးပြုနည်းတွေကို ဒီမှာဖတ်ရှုနိုင်ပါတယ်။
-        </p>
-      `,
-      content5: `
-        <h2>Security Tips</h2>
-        <p>
-        Account လုံခြုံရေးအတွက် password များကို မျှဝေမထားပါနှင့်။
-        </p>
-      `,
-      content1: `
-        <h2>Game Guide</h2>
-        <p>This is a detailed game guide. Scroll to read more.<br><br>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br><br>
-        More guide content here...<br><br>
-        Strategy, leveling tips, gameplay instructions.
-        </p>
-      `,
-      content2: `
-        <h2>Knowledge Sharing</h2>
-        <p>
+      content1: `<h2>Game Guide</h2><p>Game guide content here.</p>`,
+
+      content2: `<h2>Knowledge Sharing</h2><p>
         Shareနဲ့ Private ဘာကွာလဲဆိုရင် —<br><br>
         Share က အများနဲ့သုံးရတာပါ။<br><br>
         Private က mail အသစ် သီးသန့်တခု ပေးမှာပါ။<br><br>
         Own mail က ကိုယ်ပိုင် mail နဲ့ ရမှာပါ။
-        </p>
-      `,
-      content3: `
-        <h2>Tips & Tricks</h2>
-        <p>Helpful tips to improve your gameplay.<br><br>
-        Hidden tricks, shortcuts, and pro strategies.
-        </p>
-      `
+      </p>`,
+
+      content3: `<h2>Tips & Tricks</h2><p>Tips content here.</p>`
     };
 
     function openModal(key) {
@@ -219,12 +168,6 @@ body {
 
     function closeModal() {
       document.getElementById('modal').style.display = 'none';
-    }
-
-    window.onclick = function(e) {
-      if (e.target === document.getElementById('modal')) {
-        closeModal();
-      }
     }
 
     function filterBoxes() {
