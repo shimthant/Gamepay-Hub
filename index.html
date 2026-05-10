@@ -1,109 +1,873 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gamepay Hub - Mobile Game Store</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gamepay Hub - Premium Topup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Poppins,sans-serif;
     }
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #020d1f 0%, #0a1f3a 50%, #020d1f 100%);
-      color: #fff;
-      min-height: 100vh;
-      overflow-x: hidden;
+    html,body{
+      width:100%;
+      max-width:100%;
+      overflow-x:hidden;
+      scroll-behavior:smooth;
     }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 16px;
+    body{
+      min-height:100vh;
+      color:#fff;
+      background:linear-gradient(135deg,#03142f 0%, #083a86 55%, #0c54c7 100%);
     }
 
-    /* Animations */
-    @keyframes floatIcon {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-8px); }
-    }
-
-    @keyframes glowPulse {
-      0% { box-shadow: 0 0 8px rgba(255,211,77,0.4), inset 0 0 8px rgba(255,211,77,0.1); }
-      100% { box-shadow: 0 0 16px rgba(255,211,77,0.8), inset 0 0 16px rgba(255,211,77,0.2); }
-    }
-
-    @keyframes buttonPulse {
-      0% { box-shadow: 0 0 8px rgba(25,232,255,0.3), 0 0 16px rgba(25,232,255,0.1); }
-      100% { box-shadow: 0 0 18px rgba(25,232,255,0.6), 0 0 32px rgba(25,232,255,0.2); }
-    }
-
-    @keyframes popIn {
-      0% { transform: scale(0.8); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    /* Particles background */
-    #particles-js {
-      position: fixed;
+    /* Navigation Bar */
+    nav {
+      background: rgba(8, 49, 112, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 15px 20px;
+      position: sticky;
       top: 0;
-      left: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(120, 232, 255, 0.2);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .nav-logo {
+      font-size: 20px;
+      font-weight: 800;
+      color: #17e6ff;
+      text-shadow: 0 0 10px rgba(23, 230, 255, 0.5);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 10px;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 1px solid rgba(23, 230, 255, 0.3);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: 0.3s;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      background: #17e6ff;
+      color: #03244e;
+      border-color: #17e6ff;
+      box-shadow: 0 0 15px rgba(23, 230, 255, 0.4);
+    }
+
+    .container{
+      width:100%;
+      max-width:1100px;
+      margin:0 auto;
+      padding:16px;
+    }
+
+    .header{
+      text-align:center;
+      margin-top: 20px;
+      margin-bottom:18px;
+    }
+
+    .header h1{
+      font-size:36px;
+      font-weight:800;
+      color:#fff;
+      text-shadow:0 0 8px #00eaff,0 0 24px #00eaff;
+      letter-spacing:.3px;
+    }
+
+    .hero{
+      background:linear-gradient(180deg,rgba(10,87,180,.35),rgba(255,255,255,.05));
+      border:1px solid rgba(120,232,255,.2);
+      border-radius:22px;
+      padding:20px;
+      margin-bottom:18px;
+      box-shadow:0 0 25px rgba(0,234,255,.12);
+      backdrop-filter:blur(10px);
+    }
+
+    .search-wrap {
+      margin-bottom: 20px;
+    }
+
+    .search-input {
       width: 100%;
-      height: 100%;
-      z-index: -1;
+      padding: 14px 20px;
+      border-radius: 15px;
+      border: 1px solid rgba(120, 232, 255, 0.2);
+      background: rgba(8, 49, 112, 0.6);
+      color: white;
+      font-size: 15px;
+      outline: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
-    .page {
-      display: none;
+    .game-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
     }
 
-    .page.active {
+    .card{
+      background:linear-gradient(180deg,rgba(15,82,193,.96),rgba(8,50,122,.96));
+      border:1px solid rgba(118,231,255,.22);
+      border-radius:22px;
+      padding:18px 12px;
+      text-align:center;
+      cursor:pointer;
+      transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+      box-shadow:0 8px 24px rgba(0,0,0,.18);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card:hover{
+      transform:translateY(-6px) scale(1.015);
+      box-shadow:0 0 16px rgba(0,234,255,.6),0 12px 28px rgba(0,0,0,.22);
+      border-color:rgba(118,231,255,.5);
+    }
+
+    .game-icon-wrap{
+      width:80px;
+      height:80px;
+      margin:0 auto 12px;
+      border-radius:20px;
+      background: radial-gradient(circle at top,rgba(0,234,255,.18),rgba(255,255,255,.05));
+      box-shadow:0 0 18px rgba(0,234,255,.28);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .card img{
+      width:60px;
+      height:60px;
+      object-fit:contain;
+      border-radius: 12px;
+    }
+
+    .card span{
+      display:block;
+      font-size:14px;
+      font-weight:700;
+      color:#fff;
+      text-shadow:0 0 8px rgba(0,234,255,.8);
+    }
+
+    .panel{
+      background:linear-gradient(180deg,rgba(8,49,112,.97),rgba(6,36,86,.97));
+      border:1px solid rgba(120,232,255,0.18);
+      border-radius:22px;
+      padding:25px;
+      box-shadow:0 10px 28px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
       display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #d8f8ff;
+      font-size: 14px;
     }
 
-    /* Utility classes */
-    .text-center { text-align: center; }
-    .mt-4 { margin-top: 16px; }
-    .mb-4 { margin-bottom: 16px; }
-    .p-4 { padding: 16px; }
+    .input-group input, .input-group textarea, .input-group select {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(120, 232, 255, 0.3);
+      background: rgba(3, 20, 47, 0.6);
+      color: white;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .input-group input:focus {
+      border-color: #17e6ff;
+      box-shadow: 0 0 10px rgba(23, 230, 255, 0.2);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 16px;
+      background: #19e8ff;
+      color: #03244e;
+      border: none;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 0 18px rgba(25, 232, 255, 0.36);
+      transition: 0.3s;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.1);
+      transform: translateY(-2px);
+    }
+
+    .btn-primary:disabled {
+      background: #555;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* Order Status Styles */
+    .status-badge {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .status-pending { background: #ffc107; color: #000; }
+    .status-success { background: #28a745; color: #fff; }
+    .status-reject { background: #dc3545; color: #fff; }
+
+    .order-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(120, 232, 255, 0.1);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .admin-order-img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Auth Section */
+    #auth-section {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .google-btn {
+      background: white;
+      color: #444;
+      padding: 14px 28px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 30px auto;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      transition: 0.3s;
+    }
+
+    .google-btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    /* Admin View Table */
+    .admin-table-container {
+      overflow-x: auto;
+      background: rgba(8, 49, 112, 0.5);
+      border-radius: 15px;
+      border: 1px solid rgba(120, 232, 255, 0.1);
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .admin-table th, .admin-table td {
+      padding: 15px;
+      border-bottom: 1px solid rgba(120, 232, 255, 0.1);
+      text-align: left;
+    }
+    .admin-table th { 
+      background: rgba(25, 232, 255, 0.1); 
+      color: #17e6ff;
+      font-weight: 700;
+    }
+
+    .action-btn {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      margin-right: 5px;
+      font-size: 11px;
+    }
+    .btn-approve { background: #28a745; color: white; }
+    .btn-reject { background: #dc3545; color: white; }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      .game-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .header h1 { font-size: 28px; }
+      .nav-btn { padding: 6px 10px; font-size: 11px; }
+      .card span { font-size: 12px; }
+      .game-icon-wrap { width: 65px; height: 65px; }
+      .card img { width: 45px; height: 45px; }
+      .admin-table { font-size: 11px; }
+      .admin-table th, .admin-table td { padding: 8px; }
+    }
+
+    .hidden { display: none !important; }
+
   </style>
 </head>
 <body>
-  <div id="particles-js"></div>
 
-  <!-- HOME PAGE -->
-  <div id="home-page" class="page active">
-    <div class="container" style="padding-top: 24px; padding-bottom: 40px;">
-      <!-- Header -->
-      <div style="text-align: center; margin-bottom: 18px;">
-        <h1 style="font-size: 36px; font-weight: 800; color: #fff; text-shadow: 0 0 8px #00eaff, 0 0 24px #00eaff; letter-spacing: 0.3px;">
-          Gamepay Hub
-        </h1>
-        <p style="margin-top: 6px; color: #d8f8ff; font-size: 14px;">Mobile Game Store</p>
+  <nav>
+    <a href="#" class="nav-logo" onclick="showPage('home')">GAMEPAY HUB</a>
+    <div class="nav-links">
+      <button class="nav-btn active" id="btn-home" onclick="showPage('home')">Home</button>
+      <button class="nav-btn" id="btn-orders" onclick="showPage('my-orders')">Orders</button>
+      <button class="nav-btn" id="btn-admin" onclick="showPage('admin-login')">Admin</button>
+      <button id="logout-btn" class="nav-btn hidden" onclick="handleLogout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    
+    <!-- Auth Page -->
+    <div id="auth-page" class="hidden">
+      <div id="auth-section">
+        <h2 style="font-size: 28px; text-shadow: 0 0 10px #00eaff;">Welcome Back!</h2>
+        <p style="color: #d8f8ff; margin-top: 10px;">Sign in with Google to manage your orders easily.</p>
+        <button class="google-btn" onclick="handleGoogleLogin()">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="24">
+          Sign in with Google
+        </button>
+      </div>
+    </div>
+
+    <!-- Home Page (Game Menu) -->
+    <div id="home-page">
+      <div class="header">
+        <h1>Premium Topup</h1>
+        <p>Reliable & Instant Game Services</p>
       </div>
 
-      <!-- Hero -->
-      <div style="background: linear-gradient(180deg, rgba(10,87,180,.35), rgba(255,255,255,.05)); border: 1px solid rgba(120,232,255,.2); border-radius: 22px; padding: 16px; margin-bottom: 18px; box-shadow: 0 0 25px rgba(0,234,255,.12); backdrop-filter: blur(10px);">
-        <div style="font-size: 18px; font-weight: 800; color: #fff; text-shadow: 0 0 10px #00eaff;">Fast Topup • Neon Blue Store UI</div>
-        <div style="margin-top: 6px; color: #d8f8ff; font-size: 13px; line-height: 1.5;">Select your game, choose items, upload payment screenshot, and submit your order in one tap.</div>
+      <div class="search-wrap">
+        <input type="text" id="gameSearch" class="search-input" placeholder="Search your favorite game..." onkeyup="filterGames()">
       </div>
 
-      <!-- Search -->
-      <div style="margin: 14px 0 18px; display: flex; justify-content: center;">
-        <input
-          id="search-input"
-          type="text"
-          placeholder="🔎 Search game..."
-          style="width: 100%; max-width: 460px; padding: 14px 18px; border-radius: 18px; border: 1px solid rgba(120,232,255,.22); outline: none; background: linear-gradient(180deg, rgba(15,82,193,.96), rgba(8,50,122,.96)); color: #fff; font-size: 15px; font-weight: 600; box-shadow: 0 0 14px rgba(0,234,255,.16);"
-          onkeyup="filterGames()"
-        />
+      <div id="game-menu" class="game-grid">
+        <!-- Games will be loaded here via JavaScript -->
       </div>
+    </div>
 
-      <!-- Game Grid -->
-      <div id="game-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px;"></div>
+    <!-- Order Form Page -->
+    <div id="order-form-page" class="hidden">
+      <button class="nav-btn" onclick="showPage('home')" style="margin-bottom: 20px;">← Back to Menu</button>
+      <div class="panel">
+        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+          <div id="form-game-icon" class="game-icon-wrap" style="margin: 0; width: 60px; height: 60px;">
+            <img src="" style="width: 40px; height: 40px;">
+          </div>
+          <h2 id="selected-game-title" style="color: #17e6ff; font-size: 24px;">Game Name</h2>
+        </div>
+        
+        <div class="input-group">
+          <label>Select Item</label>
+          <select id="item-select" onchange="updateTotal()"></select>
+        </div>
+
+        <div class="input-group">
+          <label>Player ID / Account Info</label>
+          <input type="text" id="player-id" placeholder="e.g. 12345678 (1234)">
+        </div>
+
+        <div class="input-group">
+          <label>Payment Method</label>
+          <div style="display: flex; gap: 10px; margin-top: 5px;">
+            <label style="background: rgba(25, 232, 255, 0.1); padding: 12px; border-radius: 12px; cursor: pointer; flex: 1; text-align: center; border: 1px solid rgba(23, 230, 255, 0.2);">
+              <input type="radio" name="payment" value="KPay" checked> KPay
+            </label>
+            <label style="background: rgba(25, 232, 255, 0.1); padding: 12px; border-radius: 12px; cursor: pointer; flex: 1; text-align: center; border: 1px solid rgba(23, 230, 255, 0.2);">
+              <input type="radio" name="payment" value="WavePay"> WavePay
+            </label>
+          </div>
+        </div>
+
+        <div id="payment-details" style="background: rgba(25, 232, 255, 0.05); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px dashed rgba(23, 230, 255, 0.3); text-align: center;">
+          <p style="font-size: 13px; color: #d8f8ff;">Please transfer the total amount to:</p>
+          <p style="font-weight: 800; font-size: 22px; color: #17e6ff; margin: 5px 0;">09795687480</p>
+          <p style="font-weight: 600;">Name: Aung Shin Thant Htun</p>
+        </div>
+
+        <div class="input-group">
+          <label>Payment Screenshot (Required)</label>
+          <input type="file" id="payment-ss" accept="image/*">
+        </div>
+
+        <div class="input-group">
+          <label>Payment ID (Last 5 Digits)</label>
+          <input type="text" id="payment-id" placeholder="Enter last 5 digits of Transaction ID" maxlength="5">
+        </div>
+
+        <div style="background: rgba(255, 241, 118, 0.1); padding: 15px; border-radius: 12px; margin-bottom: 25px; text-align: center;">
+          <span style="font-size: 14px; color: #fff176;">Total Amount:</span>
+          <div style="font-size: 28px; font-weight: 800; color: #fff176;"><span id="order-total">0</span> ks</div>
+        </div>
+
+        <button class="btn-primary" id="submit-order-btn" onclick="submitOrder()">Confirm & Submit Order</button>
+      </div>
+    </div>
+
+    <!-- My Orders Page -->
+    <div id="my-orders-page" class="hidden">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <h2 style="color: #17e6ff;">My Orders</h2>
+        <button class="nav-btn" onclick="showPage('home')">New Order</button>
+      </div>
+      <div id="user-orders-list">
+        <!-- User orders will be loaded here -->
+      </div>
+    </div>
+
+    <!-- Admin Login Page -->
+    <div id="admin-login-page" class="hidden">
+      <div class="panel" style="max-width: 400px; margin: 40px auto;">
+        <h2 style="text-align: center; color: #17e6ff;">Admin Access</h2>
+        <div class="input-group" style="margin-top: 25px;">
+          <label>Admin Password</label>
+          <input type="password" id="admin-password" placeholder="Enter password">
+        </div>
+        <button class="btn-primary" onclick="checkAdmin()">Login as Admin</button>
+      </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="hidden">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <h2 style="color: #17e6ff;">Order Management</h2>
+        <button class="nav-btn" onclick="handleLogout()">Logout Admin</button>
+      </div>
+      
+      <div class="admin-table-container">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Game & Item</th>
+              <th>Account ID</th>
+              <th>Amount</th>
+              <th>Payment ID</th>
+              <th>SS</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="admin-orders-list">
+            <!-- Admin orders will be loaded here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // --- FIREBASE CONFIGURATION ---
+    // User MUST replace this with their own Firebase Config from Firebase Console
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Initialize Firebase
+    if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
+      firebase.initializeApp(firebaseConfig);
+    } else {
+      console.error("Firebase not configured. Please add your config in the code.");
+    }
+
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    let currentUser = null;
+    let isAdmin = false;
+
+    // --- GAME DATA (Original Data Integrated) ---
+    const games = {
+      mlbb: {
+        title: "Mobile Legends",
+        icon: "https://upload.wikimedia.org/wikipedia/en/5/5f/Mobile_Legends_Bang_Bang_logo.png",
+        items: [
+          { name: "💌 Weekly Pass", price: 6400 },
+          { name: "🔑🧰 Weekly Elite Bundle", price: 3450 },
+          { name: "စိန်2ဆ 💎50+50", price: 3550 },
+          { name: "စိန်2ဆ 💎150+150", price: 10400 },
+          { name: "စိန်2ဆ 💎250+250", price: 16600 },
+          { name: "စိန်2ဆ 💎500+500", price: 33600 },
+          { name: "💎11 Diamonds", price: 850 },
+          { name: "💎86 Diamonds", price: 5300 },
+          { name: "💎172 Diamonds", price: 10600 },
+          { name: "💎257 Diamonds", price: 15300 }
+        ]
+      },
+      genshin: {
+        title: "Genshin Impact",
+        icon: "https://upload.wikimedia.org/wikipedia/en/5/5d/Genshin_Impact_logo.png",
+        items: [
+          { name: "🌛Blessing", price: 14000 },
+          { name: "💠 60 Genesis Crystal", price: 2900 },
+          { name: "💠 300+30 Genesis Crystal", price: 14550 },
+          { name: "💠 980+110 Genesis Crystal", price: 44900 }
+        ]
+      },
+      honkaistarrail: {
+        title: "Honkai: Star Rail",
+        icon: "https://upload.wikimedia.org/wikipedia/en/d/db/Honkai_Star_Rail.png",
+        items: [
+          { name: "🌟🏷️Express Supply", price: 14000 },
+          { name: "💠60 Shards", price: 2950 },
+          { name: "💠330 Shards", price: 14600 }
+        ]
+      },
+      fcmobile: {
+        title: "FC Mobile",
+        icon: "https://upload.wikimedia.org/wikipedia/en/0/09/EA_Sports_FC_Mobile_logo.png",
+        items: [
+          { name: "🟢 FC Points 80", price: 900 },
+          { name: "🟢 FC Points 200", price: 2500 },
+          { name: "🟢 FC Points 1000", price: 12000 }
+        ]
+      },
+      honorofkings: {
+        title: "Honor of Kings",
+        icon: "https://upload.wikimedia.org/wikipedia/en/thumb/0/0b/Honor_of_Kings_Logo.png/250px-Honor_of_Kings_Logo.png",
+        items: [
+          { name: "🧩18 Tokens", price: 800 },
+          { name: "🧩80 Tokens", price: 3600 },
+          { name: "🧩240 Tokens", price: 10900 }
+        ]
+      }
+      // Note: You can add more games here from your original list following this format.
+    };
+
+    // --- PAGE NAVIGATION ---
+    function showPage(pageId) {
+      document.querySelectorAll('.container > div').forEach(div => div.classList.add('hidden'));
+      document.getElementById(pageId + '-page')?.classList.remove('hidden');
+      
+      // Nav highlighting
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      if (pageId === 'home') document.getElementById('btn-home').classList.add('active');
+      if (pageId === 'my-orders') document.getElementById('btn-orders').classList.add('active');
+      if (pageId === 'admin-login' || pageId === 'admin-dashboard') document.getElementById('btn-admin').classList.add('active');
+
+      if (pageId === 'my-orders') {
+        if (!currentUser) {
+          showPage('auth');
+          return;
+        }
+        loadUserOrders();
+      }
+      
+      if (pageId === 'admin-dashboard') {
+        if (!isAdmin) {
+          showPage('admin-login');
+          return;
+        }
+        loadAdminOrders();
+      }
+      window.scrollTo(0, 0);
+    }
+
+    // --- SEARCH FILTER ---
+    function filterGames() {
+      const keyword = document.getElementById("gameSearch").value.toLowerCase();
+      const cards = document.querySelectorAll("#game-menu .card");
+      cards.forEach(card => {
+        const title = card.querySelector('span').textContent.toLowerCase();
+        card.style.display = title.includes(keyword) ? "" : "none";
+      });
+    }
+
+    // --- AUTHENTICATION ---
+    auth.onAuthStateChanged(user => {
+      currentUser = user;
+      if (user) {
+        document.getElementById('logout-btn').classList.remove('hidden');
+        if (!document.getElementById('auth-page').classList.contains('hidden')) {
+          showPage('home');
+        }
+      } else {
+        document.getElementById('logout-btn').classList.add('hidden');
+      }
+    });
+
+    function handleGoogleLogin() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider).catch(err => alert("Google Login Error: " + err.message));
+    }
+
+    function handleLogout() {
+      auth.signOut();
+      isAdmin = false;
+      showPage('home');
+    }
+
+    function checkAdmin() {
+      const pass = document.getElementById('admin-password').value;
+      if (pass === "Aungshin12345xx") {
+        isAdmin = true;
+        showPage('admin-dashboard');
+      } else {
+        alert("Incorrect Admin Password!");
+      }
+    }
+
+    // --- GAME MENU RENDERING ---
+    function renderMenu() {
+      const menu = document.getElementById('game-menu');
+      menu.innerHTML = "";
+      for (const key in games) {
+        const g = games[key];
+        menu.innerHTML += `
+          <div class="card" onclick="openOrderForm('${key}')">
+            <div class="game-icon-wrap">
+              <img src="${g.icon}" alt="${g.title}" onerror="this.src='https://via.placeholder.com/80?text=Game'">
+            </div>
+            <span>${g.title}</span>
+          </div>
+        `;
+      }
+    }
+
+    let selectedGameKey = "";
+    function openOrderForm(key) {
+      if (!currentUser) {
+        showPage('auth');
+        return;
+      }
+      selectedGameKey = key;
+      const g = games[key];
+      document.getElementById('selected-game-title').textContent = g.title;
+      document.querySelector('#form-game-icon img').src = g.icon;
+      
+      const select = document.getElementById('item-select');
+      select.innerHTML = g.items.map((item, idx) => `<option value="${idx}">${item.name} - ${item.price} ks</option>`).join("");
+      
+      updateTotal();
+      showPage('order-form');
+    }
+
+    function updateTotal() {
+      const idx = document.getElementById('item-select').value;
+      const price = games[selectedGameKey].items[idx].price;
+      document.getElementById('order-total').textContent = price.toLocaleString();
+    }
+
+    // --- ORDER SUBMISSION ---
+    async function submitOrder() {
+      const submitBtn = document.getElementById('submit-order-btn');
+      const playerId = document.getElementById('player-id').value.trim();
+      const paymentId = document.getElementById('payment-id').value.trim();
+      const ssFile = document.getElementById('payment-ss').files[0];
+      const itemIdx = document.getElementById('item-select').value;
+      const item = games[selectedGameKey].items[itemIdx];
+      const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+
+      if (!playerId || !paymentId || !ssFile) {
+        alert("Please fill all fields and upload payment screenshot!");
+        return;
+      }
+
+      if (paymentId.length !== 5) {
+        alert("Please enter exactly the LAST 5 DIGITS of your Payment ID!");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Processing Order...";
+
+      try {
+        // 1. Upload Screenshot to Firebase Storage
+        const fileName = `${Date.now()}_${currentUser.uid}_ss.jpg`;
+        const storageRef = storage.ref(`screenshots/${fileName}`);
+        await storageRef.put(ssFile);
+        const ssUrl = await storageRef.getDownloadURL();
+
+        // 2. Save Order Data to Firestore
+        await db.collection("orders").add({
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          userName: currentUser.displayName,
+          game: games[selectedGameKey].title,
+          item: item.name,
+          price: item.price,
+          playerId: playerId,
+          paymentMethod: paymentMethod,
+          paymentIdLast5: paymentId,
+          screenshotUrl: ssUrl,
+          status: "pending",
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        alert("Order submitted successfully! We will process it soon.");
+        showPage('my-orders');
+      } catch (err) {
+        alert("Order Submission Failed: " + err.message);
+        console.error(err);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Confirm & Submit Order";
+      }
+    }
+
+    // --- LOAD ORDERS ---
+    function loadUserOrders() {
+      const list = document.getElementById('user-orders-list');
+      list.innerHTML = `<div style="text-align:center; padding:20px;">Loading your orders...</div>`;
+      
+      db.collection("orders")
+        .where("userId", "==", currentUser.uid)
+        .orderBy("createdAt", "desc")
+        .onSnapshot(snapshot => {
+          list.innerHTML = "";
+          if (snapshot.empty) {
+            list.innerHTML = `<div class="panel" style="text-align:center;">No orders found yet. Start your first topup!</div>`;
+            return;
+          }
+          snapshot.forEach(doc => {
+            const o = doc.data();
+            const date = o.createdAt?.toDate().toLocaleString() || "Processing...";
+            
+            let rejectMsg = "";
+            if (o.status === "reject") {
+              rejectMsg = `
+                <div style="margin-top: 15px; padding: 12px; background: rgba(220, 53, 69, 0.1); border-radius: 10px; border-left: 4px solid #dc3545;">
+                  <p style="color: #ff8e8e; font-size: 13px; font-weight: 600;">Game Top Up failed ဖြစ်နေသောကြောင့် telegram contact @angsthtun တွင် refund နှင့် payment ss, order id နှင့်တကွ ပြန်လာထုတ်ယူပါ။</p>
+                </div>`;
+            }
+
+            list.innerHTML += `
+              <div class="order-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                  <div>
+                    <span style="font-weight: 800; color: #17e6ff; font-size: 16px;">${o.game}</span>
+                    <p style="font-size: 14px; margin-top: 4px; color: #fff;">${o.item}</p>
+                  </div>
+                  <span class="status-badge status-${o.status}">${o.status}</span>
+                </div>
+                <div style="margin-top: 12px; display: flex; justify-content: space-between; font-size: 12px; color: #d8f8ff;">
+                  <span>ID: ${o.playerId}</span>
+                  <span>${o.price.toLocaleString()} ks</span>
+                </div>
+                <div style="margin-top: 5px; font-size: 11px; color: rgba(255,255,255,0.4);">${date}</div>
+                ${rejectMsg}
+              </div>
+            `;
+          });
+        });
+    }
+
+    function loadAdminOrders() {
+      const list = document.getElementById('admin-orders-list');
+      list.innerHTML = "<tr><td colspan='9' style='text-align:center;'>Loading orders...</td></tr>";
+
+      db.collection("orders")
+        .orderBy("createdAt", "desc")
+        .onSnapshot(snapshot => {
+          list.innerHTML = "";
+          if (snapshot.empty) {
+            list.innerHTML = "<tr><td colspan='9' style='text-align:center;'>No orders in database.</td></tr>";
+            return;
+          }
+          snapshot.forEach(doc => {
+            const o = doc.data();
+            const date = o.createdAt?.toDate().toLocaleDateString() || "Wait";
+            
+            list.innerHTML += `
+              <tr>
+                <td>${date}</td>
+                <td><b>${o.userName}</b><br><small>${o.userEmail}</small></td>
+                <td>${o.game}<br><small>${o.item}</small></td>
+                <td><code>${o.playerId}</code></td>
+                <td>${o.price.toLocaleString()} ks</td>
+                <td><span style="color:#fff176;">${o.paymentIdLast5}</span></td>
+                <td><a href="${o.screenshotUrl}" target="_blank"><img src="${o.screenshotUrl}" class="admin-order-img"></a></td>
+                <td><span class="status-badge status-${o.status}">${o.status}</span></td>
+                <td>
+                  ${o.status === 'pending' ? `
+                    <div style="display:flex;">
+                      <button class="action-btn btn-approve" onclick="updateStatus('${doc.id}', 'success')">Approve</button>
+                      <button class="action-btn btn-reject" onclick="updateStatus('${doc.id}', 'reject')">Reject</button>
+                    </div>
+                  ` : `<small style="color:#aaa;">Processed</small>`}
+                </td>
+              </tr>
+            `;
+          });
+        });
+    }
+
+    async function updateStatus(id, newStatus) {
+      if (confirm(`Are you sure you want to mark this order as ${newStatus.toUpperCase()}?`)) {
+        try {
+          await db.collection("orders").doc(id).update({ status: newStatus });
+        } catch (err) {
+          alert("Update failed: " + err.message);
+        }
+      }
+    }
+
+    // Initial Render
+    renderMenu();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
 
       <!-- Small admin button -->
       <div style="margin-top: 40px; text-align: center;">
