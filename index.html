@@ -13,60 +13,248 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
   <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Poppins,sans-serif;
+    *{ margin:0; padding:0; box-sizing:border-box; font-family:Poppins,sans-serif; }
+    html,body{ width:100%; max-width:100%; overflow-x:hidden; scroll-behavior:smooth; }
+    body{ min-height:100vh; color:#fff; background:linear-gradient(135deg,#03142f 0%, #083a86 55%, #0c54c7 100%); }
+    nav { background: rgba(8, 49, 112, 0.95); backdrop-filter: blur(10px); padding: 15px 20px; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(120, 232, 255, 0.2); }
+    .nav-logo { font-size: 20px; font-weight: 800; color: #17e6ff; text-shadow: 0 0 10px rgba(23, 230, 255, 0.5); text-decoration: none; }
+    .nav-links { display: flex; gap: 8px; }
+    .nav-btn { background: transparent; border: 1px solid rgba(23, 230, 255, 0.3); color: #fff; padding: 6px 12px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 12px; transition: 0.3s; }
+    .nav-btn:hover, .nav-btn.active { background: #17e6ff; color: #03244e; border-color: #17e6ff; }
+    .container{ width:100%; max-width:1100px; margin:0 auto; padding:16px; }
+    .header{ text-align:center; margin: 20px 0 18px; }
+    .header h1{ font-size:32px; font-weight:800; text-shadow:0 0 8px #00eaff; }
+    .search-wrap { margin-bottom: 20px; }
+    .search-input { width: 100%; padding: 14px 20px; border-radius: 15px; border: 1px solid rgba(120, 232, 255, 0.2); background: rgba(8, 49, 112, 0.6); color: white; outline: none; }
+    .game-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; }
+    .card{ background:linear-gradient(180deg,rgba(15,82,193,.96),rgba(8,50,122,.96)); border:1px solid rgba(118,231,255,.22); border-radius:18px; padding:15px 10px; text-align:center; cursor:pointer; transition: 0.25s; box-shadow:0 6px 15px rgba(0,0,0,0.2); position:relative; }
+    .card:hover{ transform:translateY(-5px); border-color:rgba(118,231,255,0.5); box-shadow:0 0 15px rgba(0,234,255,0.4); }
+    .game-icon-wrap{ width:65px; height:65px; margin:0 auto 10px; border-radius:15px; background: rgba(0,234,255,0.1); display:flex; align-items:center; justify-content:center; overflow: hidden; }
+    .card img{ width:100%; height:100%; object-fit:cover; }
+    .card span{ display:block; font-size:12px; font-weight:700; color:#fff; }
+    .panel{ background:linear-gradient(180deg,rgba(8,49,112,.97),rgba(6,36,86,.97)); border:1px solid rgba(120,232,255,0.18); border-radius:20px; padding:20px; margin-bottom: 20px; }
+    .input-group { margin-bottom: 15px; }
+    .input-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #d8f8ff; font-size: 13px; }
+    .input-group input, .input-group select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(120, 232, 255, 0.3); background: rgba(3, 20, 47, 0.6); color: white; outline: none; font-size: 14px; }
+    .btn-primary { width: 100%; padding: 14px; background: #19e8ff; color: #03244e; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; }
+    .btn-primary:disabled { background: #555; cursor: not-allowed; }
+    .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+    .status-pending { background: #ffc107; color: #000; }
+    .status-success { background: #28a745; color: #fff; }
+    .status-reject { background: #dc3545; color: #fff; }
+    .order-card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(120, 232, 255, 0.1); border-radius: 15px; padding: 15px; margin-bottom: 12px; }
+    .admin-order-img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+    .admin-table-container { overflow-x: auto; background: rgba(8, 49, 112, 0.5); border-radius: 12px; }
+    .admin-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .admin-table th, .admin-table td { padding: 12px; border-bottom: 1px solid rgba(120, 232, 255, 0.1); text-align: left; }
+    .admin-table th { background: rgba(25, 232, 255, 0.1); color: #17e6ff; }
+    .hidden { display: none !important; }
+    @media (max-width: 480px) { .game-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; } .header h1 { font-size: 24px; } }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#" class="nav-logo" onclick="showPage('home')">GP HUB</a>
+    <div class="nav-links">
+      <button class="nav-btn active" id="btn-home" onclick="showPage('home')">Home</button>
+      <button class="nav-btn" id="btn-orders" onclick="showPage('my-orders')">Orders</button>
+      <button class="nav-btn" id="btn-admin" onclick="showPage('admin-login')">Admin</button>
+      <button id="logout-btn" class="nav-btn hidden" onclick="handleLogout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div id="auth-page" class="hidden">
+      <div style="text-align: center; padding: 40px 20px;">
+        <h2>Sign In</h2>
+        <p style="color: #d8f8ff; margin: 10px 0 20px;">Sign in with Google to continue.</p>
+        <button onclick="handleGoogleLogin()" style="background: white; color: #444; padding: 12px 24px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px; margin: 0 auto;">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
+          Google Login
+        </button>
+      </div>
+    </div>
+
+    <div id="home-page">
+      <div class="header">
+        <h1>Gamepay Hub</h1>
+        <p>Premium Topup Service</p>
+      </div>
+      <div class="search-wrap">
+        <input type="text" id="gameSearch" class="search-input" placeholder="Search game..." onkeyup="filterGames()">
+      </div>
+      <div id="game-menu" class="game-grid"></div>
+    </div>
+
+    <div id="order-form-page" class="hidden">
+      <button class="nav-btn" onclick="showPage('home')" style="margin-bottom: 15px;">← Back</button>
+      <div class="panel">
+        <h2 id="selected-game-title" style="color: #17e6ff; margin-bottom: 20px;">Game Name</h2>
+        <div class="input-group"><label>Select Item</label><select id="item-select" onchange="updateTotal()"></select></div>
+        <div class="input-group"><label>Player ID / Account Info</label><input type="text" id="player-id" placeholder="Enter ID (Server)"></div>
+        <div class="input-group"><label>Payment Method</label><div style="display: flex; gap: 10px;"><label style="flex:1; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;"><input type="radio" name="payment" value="KPay" checked> KPay</label><label style="flex:1; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; text-align: center; cursor: pointer;"><input type="radio" name="payment" value="WavePay"> WavePay</label></div></div>
+        <div style="background: rgba(25, 232, 255, 0.1); padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: center;"><p style="font-size: 12px;">Transfer to: <b>09795687480</b></p><p style="font-size: 12px;">Name: <b>Aung Shin Thant Htun</b></p></div>
+        <div class="input-group"><label>Payment Screenshot</label><input type="file" id="payment-ss" accept="image/*"></div>
+        <div class="input-group"><label>Payment ID (Last 5 Digits)</label><input type="text" id="payment-id" placeholder="e.g. 12345" maxlength="5"></div>
+        <div style="text-align: center; margin-bottom: 20px;"><span style="color: #fff176; font-size: 18px; font-weight: 800;">Total: <span id="order-total">0</span> ks</span></div>
+        <button class="btn-primary" id="submit-order-btn" onclick="submitOrder()">Submit Order</button>
+      </div>
+    </div>
+
+    <div id="my-orders-page" class="hidden"><h2 style="color: #17e6ff; margin-bottom: 15px;">My Orders</h2><div id="user-orders-list"></div></div>
+    <div id="admin-login-page" class="hidden"><div class="panel" style="max-width: 350px; margin: 40px auto;"><h2 style="text-align: center;">Admin</h2><div class="input-group" style="margin-top: 20px;"><label>Password</label><input type="password" id="admin-password"></div><button class="btn-primary" onclick="checkAdmin()">Login</button></div></div>
+    <div id="admin-dashboard" class="hidden"><h2 style="color: #17e6ff; margin-bottom: 15px;">Admin Panel</h2><div class="admin-table-container"><table class="admin-table"><thead><tr><th>User</th><th>Game/Item</th><th>ID</th><th>Payment</th><th>SS</th><th>Status</th><th>Action</th></tr></thead><tbody id="admin-orders-list"></tbody></table></div></div>
+  </div>
+
+  <script>
+    const firebaseConfig = { apiKey: "YOUR_API_KEY", authDomain: "YOUR_PROJECT_ID.firebaseapp.com", projectId: "YOUR_PROJECT_ID", storageBucket: "YOUR_PROJECT_ID.appspot.com", messagingSenderId: "YOUR_MESSAGING_ID", appId: "YOUR_APP_ID" };
+    let isFirebaseReady = false; let auth, db, storage;
+    try { if (firebaseConfig.apiKey !== "YOUR_API_KEY") { firebase.initializeApp(firebaseConfig); auth = firebase.auth(); db = firebase.firestore(); storage = firebase.storage(); isFirebaseReady = true; } } catch (e) { console.error(e); }
+    let currentUser = null; let isAdmin = false;
+
+    // COMPLETE GAME DATA FROM ORIGINAL FILE
+    const data = {
+      mlbb:{ title:"Mobile Legends", top:true, icon:"images/mlbb.png", items: [ {name:"💌 Weekly Pass", price:6400}, {name:"🔑🧰 Weekly Elite Bundle", price:3450}, {name:"💼 Monthly Epic Bundle", price:17200}, {name:"🧰 Twilight Pass", price:32800}, {name:"စိန်2ဆ 💎50+50", price:3550}, {name:"စိန်2ဆ 💎150+150", price:10400}, {name:"စိန်2ဆ 💎250+250", price:16600}, {name:"စိန်2ဆ 💎500+500", price:33600}, {name:"💎11 Diamonds", price:850}, {name:"💎33 Diamonds", price:2950}, {name:"💎55 Diamonds", price:4000}, {name:"💎86 Diamonds", price:5300}, {name:"💎172 Diamonds", price:10600}, {name:"💎257 Diamonds", price:15300}, {name:"💎343 Diamonds", price:20600}, {name:"💎429 Diamonds", price:25800}, {name:"💎514 Diamonds", price:30600}, {name:"💎600 Diamonds", price:35900}, {name:"💎772 Diamonds", price:45300}, {name:"💎943 Diamonds", price:56800}, {name:"💎1049 Diamonds", price:61800}, {name:"💎1135 Diamonds", price:66950}, {name:"💎1412 Diamonds", price:82500}, {name:"💎2195 Diamonds", price:125200}, {name:"💎3688 Diamonds", price:209000} ] },
+      genshin:{ title:"Genshin Impact", top:true, icon:"unnamed.webp", items:[ {name:"🌛Blessing", price:14000}, {name:"💠 60 Genesis Crystal", price:2900}, {name:"💠 300+30 Genesis Crystal", price:14550}, {name:"💠 980+110 Genesis Crystal", price:44900}, {name:"💠 1980+260 Genesis Crystal", price:93750}, {name:"💠 3280+600 Genesis Crystal", price:153750}, {name:"💠 6480+1600 Genesis Crystal", price:294280} ] },
+      honkaistarrail: { title: "Honkai: Star Rail", icon: "1942.jpg", items: [ {name:"🌟🏷️Express Supply", price:14000}, {name:"💠60", price:2950}, {name:"💠330", price:14600}, {name:"💠1090", price:45000}, {name:"💠2240", price:89900}, {name:"💠3880", price:154000}, {name:"💠8080", price:295000} ] },
+      zenlesszonezero: { title: "Zenless Zone Zero", icon: "Zenless_Zone_Zero_icon.webp", items: [ {name:"🔑💼Inter-Knot Membership", price:14700}, {name:"🎲60", price:3050}, {name:"🎲330", price:14750}, {name:"🎲1090", price:46350}, {name:"🎲2240", price:89000}, {name:"🎲3880", price:147900}, {name:"🎲8080", price:290000} ] },
+      wuthering:{ title:"Wuthering Waves", icon:"quality_restoration_20260323135629044.jpg", items:[ {name:"🎁 Sage Solvent Aid", price:19000}, {name:"🎁 Traveler's Tube Aid Bundle", price:19500}, {name:"🎁 Traveler's EXP Aid", price:18000}, {name:"🎁 Gardener's Aid", price:18000}, {name:"🧾 Insider Channel", price:35000}, {name:"🧾 Connoisseur Upgrade", price:37000}, {name:"🧾 Connoisseur Channel", price:67000}, {name:"🎴✨ Lunite Subscription", price:18500}, {name:"🌑 60 Echo", price:3700}, {name:"🌑 180 Echo", price:19000}, {name:"🌑 300 Echo", price:57200}, {name:"🌑 600 Echo", price:115800}, {name:"🌑 900 Echo", price:191000}, {name:"🌑 1800 Echo", price:374500} ] },
+      arknights_endfield: { title: "Arknights: Endfield", icon: "ArknightsEndfield (1).webp", items: [ {name:"💼 Grand Vision Arsenal Value Pack", price:5500}, {name:"📃 Monthly Pass", price:24000}, {name:"🧰 Weekly Material Bundle", price:24000}, {name:"🧰🪛 Monthly Material Bundle", price:61000}, {name:"🗂️ Originium Supply", price:55500} ] },
+      genshin_blessing: { title: "Genshin Impact Others", icon: "unnamed.webp", items: [ {name:"🇹🇭 Blessing", price:20950}, {name:"🇧🇷 Blessing", price:20100}, {name:"🇮🇩 Blessing", price:17600}, {name:"🇰🇭 Blessing", price:22400}, {name:"🇰🇷 Blessing", price:18560}, {name:"🇲🇾 Blessing", price:18750}, {name:"🇵🇭 Blessing", price:17550}, {name:"🇺🇸 Blessing", price:20300} ] },
+      arena:{ title:"Arena Breakout", icon:"arena-breakout-infinite.jpg", items:[ {name:"🪙 66 Bonds", price:3550}, {name:"🪙 335 Bonds", price:17900}, {name:"🪙 675 Bonds", price:35300}, {name:"🪙 1690 Bonds", price:88000}, {name:"🪙 3400 Bonds", price:177000}, {name:"🪙 6820 Bonds", price:349500}, {name:"🥡 Beginner Select", price:3250}, {name:"💼 Bulletproof Case (30D)", price:9700}, {name:"💼 Composite Case (30D)", price:29100}, {name:"🔑🧾 Advanced Battle Pass", price:4150}, {name:"🔑🧾 Premium Battle Pass", price:16500}, {name:"🔑🧾 Quarterly Premium Battle Pass", price:48950} ] },
+      deltaforce:{ title:"Delta Force", icon:"delta-force-hawk-ops_drnc.1200.webp", items:[ {name:"✉️ Blaze Supplies", price:2150}, {name:"✉️ Blaze Supplies Advanced", price:6350}, {name:"💌 Season Pass Warfare Special", price:19950}, {name:"💌 Season Pass Operations Special", price:19950}, {name:"💌 Season Pass Delta Force Deluxe", price:27750}, {name:"🪙 60 Delta Coins", price:3700}, {name:"🪙 320 Delta Coins", price:18450}, {name:"🪙 750 Delta Coins", price:36250}, {name:"🪙 1480 Delta Coins", price:723300}, {name:"🪙 1980 Delta Coins", price:90500}, {name:"🪙 3950 Delta Coins", price:181000}, {name:"🪙 8100 Delta Coins", price:365000} ] },
+      codm: { title: "Call Of Duty Mobile", icon: "call-of-duty-mobile-logo.jpg", items: [ { name: "🪙 88 CP", price: 4600 }, { name: "🪙 460 CP", price: 18560 }, { name: "🪙 960 CP", price: 37110 }, { name: "🪙 2600 CP", price: 92890 }, { name: "🪙 5400 CP", price: 185600 }, { name: "🪙 11600 CP", price: 464000 }, { name: "🪙 23200 CP", price: 928000 }, { name: "🪙 34800 CP", price: 1399830 }, { name: "🪙 58000 CP", price: 2329260 } ] },
+      bloodstrike: { title: "Blood Strike", icon: "blood-strike (1).jpg", items: [ {name:"⚜️105 Golds", price:3500}, {name:"⚜️320 Golds", price:10100}, {name:"⚜️540 Golds", price:16780}, {name:"⚜️1100 Golds", price:33400 }, {name:"⚜️2260 Golds", price:64950}, {name:"⚜️5800 Golds", price:164800}, {name:"⚜️🧰Strike Pass Elite", price:13250}, {name:"⚜️🧰Strike Pass Premium", price:30350} ] },
+      fcmobile:{ title:"FC Mobile Topup", top:true, icon:"ap_resize (2).png", items:[ {name:"🟢 FC Points 80", price:900}, {name:"🟢 FC Points 200", price:2500}, {name:"🟢 FC Points 1000", price:12000}, {name:"🟢 FC Points 2000", price:23000}, {name:"🟢 FC Points 4000", price:44000}, {name:"🟢 FC Points 10000", price:109000}, {name:"☄️💫 Booster A", price:2600}, {name:"☄️💫 Booster B", price:3800}, {name:"☄️💫 Booster C", price:8800}, {name:"☄️💫 Booster D", price:11000}, {name:"🛍 Special Sale", price:5000}, {name:"🧰 Pack UEFA", price:2500}, {name:"⭐ Premium Star Pass", price:21000}, {name:"🟢 Daily FC Points 165", price:2500}, {name:"🟢 Daily FC Points 825", price:11000}, {name:"🟢 Daily FC Points 1650", price:22500}, {name:"🟢 Daily FC Points 3300", price:43500}, {name:"🟢 Daily FC Points 8250", price:109000}, {name:"🟢 Daily FC Points 16500", price:222000} ] },
+      clashofclans: { title: "Clash of Clans", icon: "1698.jpg", items: [ {name:"⚒️Builder Pack", price:9900}, {name:"🧰Resource Relief Pack", price:19500}, {name:"🧰Skilled to Build Pack", price:9900}, {name:"🧰Dragon Escape Scenery", price:49000}, {name:"🥎80 Gems", price:5000}, {name:"🥎500 Gems", price:22800}, {name:"🥎1200 Gems", price:49000}, {name:"🥎2500 Gems", price:93000}, {name:"🥎6500 Gems", price:225000} ] },
+      harry_potter_magic_awakened: { title: "Harry Potter", icon: "harry-potter-magic-awakened.jpg", items: [ {name:"🀄 Monthly Card", price:15666}, {name:"🎫 Gold Supply Pack", price:15666}, {name:"🪀 Ruby Key Pack", price:31416}, {name:"🔑💼 Clock Key Pack", price:47082}, {name:"🔑💼 Golden Key Pack", price:62664}, {name:"💎 60 Jewels", price:3402}, {name:"💎 300 Jewels", price:17220}, {name:"💎 680+70 Jewels", price:34482}, {name:"💎 980+165 Jewels", price:51744}, {name:"💎 1280+270 Jewels", price:69006}, {name:"💎 1980+380 Jewels", price:102900} ] },
+      honorofkings: { title: "Honor Of Kings", icon: "1515.jpg ", items: [ {name:"🧩18 Tokens", price:800}, {name:"🧩80 Tokens", price:3600}, {name:"🧩240 Tokens", price:10900}, {name:"🧩400 Tokens", price:18300}, {name:"🧩560 Tokens", price:25600}, {name:"🧩830 Tokens", price:36300}, {name:"🧩1245 Tokens", price:54500}, {name:"🧩2508 Tokens", price:109800}, {name:"🧩4180 Tokens", price:181900}, {name:"🧩8360 Tokens", price:363900}, {name:"🎴Weekly Card", price:4400}, {name:"🎴Weekly Card Plus", price:13900}, {name:"🥡Honor Point Value Pack", price:1300}, {name:"🥡Double Token Lucky Bag", price:1300}, {name:"💼Standard Rebate Pack", price:1300}, {name:"💼Premium Rebate Pack", price:5300} ] },
+      swordofjustice: { title: "Sword of Justice", icon: "sword-of-justice.jpg", items: [ {name:"Exquisite Treasures", price:750}, {name:"Monthly Pass", price:18300}, {name:"Basic Battle Pass", price:34700}, {name:"Battle Pass Upgrade", price:55400}, {name:"Advanced Battle Pass", price:83100}, {name:"60 Ornate Jades", price:4580}, {name:"330 Ornate Jades", price:19850}, {name:"1100 Ornate Jades", price:61150}, {name:"2268 Ornate Jades", price:122250}, {name:"3808 Ornate Jades", price:197980}, {name:"7776 Ornate Jades", price:383000} ] },
+      wherewindsmeet: { title: "Where Winds Meet", icon: "3285.jpg", items: [ {name:"📋Monthly Pass", price:20100}, {name:"🔑📋Elite Battle Pass", price:40200}, {name:"🔑📋Premium Battle Pass", price:79500}, {name:"🦪60 Echo", price:4150}, {name:"🦪180 Echo", price:12150}, {name:"🦪300 Echo", price:20200}, {name:"🦪600 Echo", price:40500}, {name:"🦪900 Echo", price:60200}, {name:"🦪1800 Echo", price:119500}, {name:"🦪3000 Echo", price:198000}, {name:"🦪6000 Echo", price:399900}, {name:"🦪12000 Echo", price:798520} ] },
+      pubgmobile_packs: { title: "PUBG Packs & Passes", icon: "1372.jpg", items: [ {name:"📮Prime (1 Month)", price:4150}, {name:"📮Prime (3 Months)", price:12450}, {name:"📮Prime (6 Months)", price:25060}, {name:"📮Prime (12 Months)", price:49950}, {name:"🧰Prime Plus (1 Month)", price:41600}, {name:"🧰Prime Plus (6 Months)", price:244900}, {name:"🧰Prime Plus (12 Months)", price:489200}, {name:"🧰First Purchase Pack", price:4150}, {name:"🔑🧰Materials Pack", price:12600}, {name:"🔑💼Mythic Emblem Pack", price:20950} ] },
+      pubg_uc: { title: "PUBG Mobile UC", icon: "pubg (1).jpg", items: [ {name:"🪙60 UC", price:4200}, {name:"🪙325 UC", price:20950}, {name:"🪙660 UC", price:41650}, {name:"🪙1800 UC", price:103960}, {name:"🪙3850 UC", price:207500}, {name:"🪙8100 UC", price:414000} ] },
+      freefire: { title: "Free Fire (Global)", icon: "IMG_20260324_125340_567.jpg", items: [ {name:"💎110 Diamonds", price:3750}, {name:"💎341 Diamonds", price:11400}, {name:"💎572 Diamonds", price:18650}, {name:"💎1166 Diamonds", price:37550}, {name:"💎2398 Diamonds", price:75000}, {name:"💎6160 Diamonds", price:189950}, {name:"🎟 Weekly Lite", price:1800}, {name:"🎟 Weekly Membership", price:7500}, {name:"🎟 Monthly Membership", price:26950}, {name:"🔑 Evo Access (3D)", price:2000}, {name:"🔑 Evo Access (7D)", price:3450}, {name:"🔑 Evo Access (30D)", price:1000} ] },
+      duetnightabyss: { title: "Duet Night Abyss", icon: "duet-night-abyss.jpg", items: [ {name:"💿60 Lunar Crystal", price:5600}, {name:"💿300 Lunar Crystal", price:23000}, {name:"💿980 Lunar Crystal", price:65300}, {name:"💿1980 Lunar Crystal", price:129600}, {name:"💿3280 Lunar Crystal", price:225000}, {name:"💿6480 Lunar Crystal", price:428500} ] },
+      valorant_th: { title: "Valorant Thailand", icon: "VALORANT_Jett_Red_crop.jpg", items: [ {name:"💢475 Points", price:17830}, {name:"💢1000 Points", price:35690}, {name:"💢2050 Points", price:71340}, {name:"💢3650 Points", price:126290}, {name:"💢5350 Points", price:181200}, {name:"💢11000 Points", price:362400} ] },
+      valorant_sg: { title: "Valorant Singapore", icon: "VALORANT_Jett_Red_crop.jpg", items: [ {name:"💢475 Points", price:25000}, {name:"💢1000 Points", price:47000}, {name:"💢2050 Points", price:85000}, {name:"💢3650 Points", price:150000}, {name:"💢5350 Points", price:220000}, {name:"💢11000 Points", price:435000} ] },
+      oncehuman: { title: "Once Human", icon: "once-human.jpg", items: [ {name:"📀62 Crystgin", price:4400}, {name:"📀339 Crystgin", price:22100}, {name:"📀1120 Crystgin", price:66300}, {name:"📀2340 Crystgin", price:132400}, {name:"📀3979 Crystgin", price:220750}, {name:"📀8075 Crystgin", price:426680}, {name:"📋Meta Pass", price:22000}, {name:"📋Battle Pass (Adv)", price:44250}, {name:"📋Battle Pass (Del)", price:103700} ] },
+      lol_wildrift: { title: "LOL: Wild Rift", icon: "lol-wild-rift.jpg", items:[ {name:"💎🇹🇭 425 Cores", price:19460}, {name:"💎🇹🇭 1000 Cores", price:44130}, {name:"💎🇹🇭1850 Cores", price:77790}, {name:"💎🇹🇭 3275 Cores", price:136210}, {name:"💎🇹🇭 4800 Cores", price:194580}, {name:"💎🇹🇭 10000 Cores", price:389110}, {name:"💎🇸🇬 425 Cores", price:23530}, {name:"💎🇸🇬 1000 Cores", price:50700}, {name:"💎🇸🇬1850 Cores", price:91490}, {name:"💎🇸🇬 3275 Cores", price:159500}, {name:"💎🇸🇬 4800 Cores", price:230940}, {name:"💎🇸🇬 10000 Cores", price:468950} ] },
+      carxstreet: { title: "CarX Street Gold/Cash", icon: "bba977e0d57fa56795386b9f901bda565b8c73a9ce1ec3ebf86083ccee87d179_200.jpeg", items: [ {name:"📀15 Gold", price:7520}, {name:"📀40 Gold", price:20070}, {name:"📀90 Gold", price:38540}, {name:"📀250 Gold", price:74370}, {name:"📀750 Gold", price:206020}, {name:"📀1800 Gold", price:385070}, {name:"💸10000 $", price:3880}, {name:"💸50000 $", price:14980}, {name:"💸120000 $", price:22400}, {name:"💸300000 $", price:38540}, {name:"💸800000 $", price:74370}, {name:"💸2500000 $", price:206020} ] },
+      carx_others: { title: "CarX Street Packs", icon: "bba977e0d57fa56795386b9f901bda565b8c73a9ce1ec3ebf86083ccee87d179_200.jpeg", items: [ {name:"🏎️Street Pass", price:30470}, {name:"🏎️Premium (7D)", price:3880}, {name:"🏎️Premium (30D)", price:15590}, {name:"🏎️Premium (90D)", price:41530}, {name:"🏎️Premium (180D)", price:80340}, {name:"🧰Pack 1", price:7520}, {name:"🧰Pack 2", price:32570}, {name:"🧰Pack 3", price:116120}, {name:"🧰Pack 4", price:235780}, {name:"🪀500 Points", price:15910}, {name:"🪀1500 Points", price:38540}, {name:"🪀2800 Points", price:59440}, {name:"🪀4000 Points", price:80340}, {name:"🔑🏎️Mountain Drive", price:17360}, {name:"🔑🏎️Sunset Speedway", price:20070} ] },
+      racingmaster: { title: "Racing Master", icon: "racing.webp", items: [ { name: "💎 74 Gems", price: 3980 }, { name: "💎 147 Gems", price: 8040 }, { name: "💎 221 Gems", price: 12010 }, { name: "💎 368 Gems", price: 20530 }, { name: "💎 735 Gems", price: 40950 }, { name: "💎 1050 Gems", price: 57840 }, { name: "💎 1470 Gems", price: 81200 }, { name: "💎 2205 Gems", price: 122090 }, { name: "💎 3570 Gems", price: 196660 }, { name: "💎 6930 Gems", price: 381370 }, { name: "🗓 Weekly Card", price: 3980 }, { name: "🗓 Monthly Card", price: 9290 }, { name: "⚡ Deluxe MP", price: 20530 }, { name: "⚡ Upgrade to Premium MP", price: 17700 }, { name: "☄️ Premium MP", price: 38180 }, { name: "☄️ Upgrade MP", price: 76260 }, { name: "☄️ MP Combo", price: 96350 }, { name: "🎁🧰 Novice Pack", price: 800 }, { name: "🎁🧰 Value Outfit Pack", price: 3980 }, { name: "🎁🧰 Growth Fund", price: 26120 }, { name: "🎁🧰 Legendary Car Pack", price: 57840 } ] },
+      identity_v: { title: "Identity V", icon: "identity-v-logo.jpg", items: [ {name:"💌66 Echoes", price:3570}, {name:"💌203 Echoes", price:10690}, {name:"💌335 Echoes", price:17960}, {name:"💌759 Echoes", price:35950}, {name:"💌2277 Echoes", price:107940}, {name:"💌3795 Echoes", price:179870}, {name:"💌7590 Echoes", price:359790}, {name:"🧰Inspirations Package", price:4340}, {name:"🧰Clues Package", price:21840}, {name:"🏷️Memory Sphere Package", price:43670}, {name:"🥡7th Anni Pack I", price:41160}, {name:"🥡7th Anni Pack II", price:61760}, {name:"🥡7th Anni Pack III", price:205820}, {name:"🥡7th Anni Pack IV", price:411670} ] },
+      afk_journey: { title: "AFK Journey", icon: "afk-journey.jpg", items: [ {name:"💘 Esperia Monthly Classic Gazette", price:19446}, {name:"💘 Esperia Monthly Premium Gazette", price:61320}, {name:"💘 Growth Bundle", price:117936}, {name:"💎 21 Dragon Crystals", price:4200}, {name:"💎 126 Dragon Crystals", price:19446}, {name:"💎 294 Dragon Crystals", price:39144}, {name:"💎 588 Dragon Crystals", price:81018}, {name:"💎 1552 Dragon Crystals", price:196728}, {name:"💎 3150 Dragon Crystals", price:393666} ] },
+      heartopia: { title: "Heartopia", icon: "IMG_20260324_095559_596.jpg", items: [ {name:"📋🌟Junior Membership", price:2700}, {name:"📋🌟Formal Membership", price:15300}, {name:"💝20 ", price:2600}, {name:"💝60 ", price:5190}, {name:"💝320 ", price:24770}, {name:"💝730 ", price:50000}, {name:"💝1370 ", price:94000}, {name:"💝2130 ", price:144000}, {name:"💝3550 ", price:234800}, {name:"💝7050 ", price:430000}, {name:"🩷💼Winter Frost Box", price:23000}, {name:"🩷💼Winter Frost Box Boost", price:28100}, {name:"🩷💼Winter Frost Luxury Box", price:50500} ] }
+    };
+
+    function showPage(pageId) {
+      document.querySelectorAll('.container > div').forEach(div => div.classList.add('hidden'));
+      const target = document.getElementById(pageId + '-page');
+      if (target) target.classList.remove('hidden');
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      const btn = document.getElementById('btn-' + (pageId.includes('admin') ? 'admin' : (pageId === 'my-orders' ? 'orders' : 'home')));
+      if (btn) btn.classList.add('active');
+      if (pageId === 'my-orders') { if (!isFirebaseReady) { alert("Firebase not configured!"); showPage('home'); return; } if (!currentUser) { showPage('auth'); return; } loadUserOrders(); }
+      if (pageId === 'admin-dashboard') { if (!isAdmin) { showPage('admin-login'); return; } loadAdminOrders(); }
+      window.scrollTo(0, 0);
     }
 
-    html,body{
-      width:100%;
-      max-width:100%;
-      overflow-x:hidden;
-      scroll-behavior:smooth;
+    function filterGames() {
+      const kw = document.getElementById("gameSearch").value.toLowerCase();
+      document.querySelectorAll("#game-menu .card").forEach(c => { c.style.display = c.textContent.toLowerCase().includes(kw) ? "" : "none"; });
     }
 
-    body{
-      min-height:100vh;
-      color:#fff;
-      background:linear-gradient(135deg,#03142f 0%, #083a86 55%, #0c54c7 100%);
+    if (isFirebaseReady) { auth.onAuthStateChanged(user => { currentUser = user; document.getElementById('logout-btn').classList.toggle('hidden', !user); if (user && !document.getElementById('auth-page').classList.contains('hidden')) showPage('home'); }); }
+    function handleGoogleLogin() { if (!isFirebaseReady) return alert("Firebase not configured!"); auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e => alert(e.message)); }
+    function handleLogout() { if (isFirebaseReady) auth.signOut(); isAdmin = false; showPage('home'); }
+    function checkAdmin() { if (document.getElementById('admin-password').value === "Aungshin12345xx") { isAdmin = true; showPage('admin-dashboard'); } else { alert("Wrong Password!"); } }
+
+    function renderMenu() {
+      const menu = document.getElementById('game-menu');
+      menu.innerHTML = "";
+      for (const key in data) {
+        const g = data[key];
+        menu.innerHTML += `
+          <div class="card" onclick="openOrderForm('${key}')">
+            <div class="game-icon-wrap"><img src="${g.icon}" onerror="this.src='https://via.placeholder.com/80?text=Game'"></div>
+            <span>${g.title}</span>
+          </div>
+        `;
+      }
     }
 
-    /* Navigation Bar */
-    nav {
-      background: rgba(8, 49, 112, 0.95);
-      backdrop-filter: blur(10px);
-      padding: 15px 20px;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(120, 232, 255, 0.2);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    let selectedGameKey = "";
+    function openOrderForm(key) {
+      if (!isFirebaseReady) return alert("Firebase not configured! Add your API keys.");
+      if (!currentUser) { showPage('auth'); return; }
+      selectedGameKey = key;
+      const g = data[key];
+      document.getElementById('selected-game-title').textContent = g.title;
+      const sel = document.getElementById('item-select');
+      sel.innerHTML = g.items.map((it, idx) => `<option value="${idx}">${it.name} - ${it.price} ks</option>`).join("");
+      updateTotal();
+      showPage('order-form');
     }
 
-    .nav-logo {
-      font-size: 20px;
-      font-weight: 800;
-      color: #17e6ff;
-      text-shadow: 0 0 10px rgba(23, 230, 255, 0.5);
-      text-decoration: none;
+    function updateTotal() {
+      const idx = document.getElementById('item-select').value;
+      document.getElementById('order-total').textContent = data[selectedGameKey].items[idx].price.toLocaleString();
     }
 
-    .nav-links {
-      display: flex;
-      gap: 10px;
+    async function submitOrder() {
+      const pid = document.getElementById('player-id').value.trim();
+      const payid = document.getElementById('payment-id').value.trim();
+      const ss = document.getElementById('payment-ss').files[0];
+      const btn = document.getElementById('submit-order-btn');
+      if (!pid || !payid || !ss) return alert("Fill all fields!");
+      if (payid.length !== 5) return alert("Enter last 5 digits of Payment ID!");
+      btn.disabled = true; btn.textContent = "Uploading...";
+      try {
+        const ref = storage.ref(`ss/${Date.now()}_${currentUser.uid}.jpg`);
+        await ref.put(ss);
+        const url = await ref.getDownloadURL();
+        const item = data[selectedGameKey].items[document.getElementById('item-select').value];
+        await db.collection("orders").add({ uid: currentUser.uid, email: currentUser.email, name: currentUser.displayName, game: data[selectedGameKey].title, item: item.name, price: item.price, pid: pid, payMethod: document.querySelector('input[name="payment"]:checked').value, payId: payid, ss: url, status: "pending", createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        alert("Order Success!"); showPage('my-orders');
+      } catch (e) { alert("Error: " + e.message); } finally { btn.disabled = false; btn.textContent = "Submit Order"; }
     }
 
-    .nav-btn {
-      background: transparent;
-      border: 1px solid rgba(23, 230, 255, 0.3);
-      color: #fff;
-      padding: 8px 14px;
-      border-radius: 10px;
+    function loadUserOrders() {
+      const list = document.getElementById('user-orders-list');
+      list.innerHTML = "Loading...";
+      db.collection("orders").where("uid", "==", currentUser.uid).orderBy("createdAt", "desc").onSnapshot(snap => {
+        list.innerHTML = snap.empty ? "No orders." : "";
+        snap.forEach(doc => {
+          const o = doc.data();
+          list.innerHTML += `<div class="order-card"><div style="display:flex; justify-content:space-between;"><b>${o.game}</b><span class="status-badge status-${o.status}">${o.status}</span></div><p style="font-size:13px; margin-top:5px;">${o.item} - ${o.price} ks</p>${o.status === 'reject' ? '<p style="color:#ff8e8e; font-size:11px; margin-top:5px;">Topup failed. Contact @angsthtun for refund.</p>' : ''}</div>`;
+        });
+      });
+    }
+
+    function loadAdminOrders() {
+      const list = document.getElementById('admin-orders-list');
+      list.innerHTML = "Loading...";
+      db.collection("orders").orderBy("createdAt", "desc").onSnapshot(snap => {
+        list.innerHTML = "";
+        snap.forEach(doc => {
+          const o = doc.data();
+          list.innerHTML += `<tr><td>${o.name}</td><td>${o.game}<br>${o.item}</td><td>${o.pid}</td><td>${o.payId}</td><td><a href="${o.ss}" target="_blank"><img src="${o.ss}" class="admin-order-img"></a></td><td><span class="status-badge status-${o.status}">${o.status}</span></td><td>${o.status === 'pending' ? `<button class="status-badge status-success" style="border:none; cursor:pointer;" onclick="updateStatus('${doc.id}','success')">OK</button><button class="status-badge status-reject" style="border:none; cursor:pointer;" onclick="updateStatus('${doc.id}','reject')">X</button>` : 'Done'}</td></tr>`;
+        });
+      });
+    }
+
+    async function updateStatus(id, s) { if (confirm("Confirm " + s + "?")) await db.collection("orders").doc(id).update({ status: s }); }
+    renderMenu();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
       cursor: pointer;
       font-weight: 600;
       font-size: 13px;
