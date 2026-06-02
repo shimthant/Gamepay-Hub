@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KINNICHH | Virtual Visa Card Services</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KINNICHH | Virtual Card Services</title>
+
 <style>
 *{
   margin:0;
@@ -11,142 +12,343 @@
   box-sizing:border-box;
   font-family:Inter,Arial,sans-serif;
 }
+
 body{
-  background:linear-gradient(135deg,#f8fbff,#e9f7ff,#ffffff);
-  color:#111;
-}
-.hero{
-  min-height:100vh;
-  padding:40px 18px;
+  color:#111827;
   background:
-    radial-gradient(circle at top left,rgba(255,0,80,.18),transparent 35%),
-    radial-gradient(circle at bottom right,rgba(0,255,150,.22),transparent 35%);
+    radial-gradient(circle at top left,rgba(255,56,92,.20),transparent 35%),
+    radial-gradient(circle at top right,rgba(34,211,238,.25),transparent 35%),
+    radial-gradient(circle at bottom right,rgba(34,197,94,.22),transparent 35%),
+    linear-gradient(135deg,#fff7fb,#eefaff,#ffffff);
+  overflow-x:hidden;
 }
+
+section{
+  padding:70px 22px;
+}
+
 .container{
-  max-width:1100px;
+  max-width:1150px;
   margin:auto;
 }
+
 .nav{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:55px;
+  gap:15px;
+  margin-bottom:70px;
 }
+
 .logo{
-  font-size:24px;
-  font-weight:900;
-  letter-spacing:1px;
-  color:#0f172a;
-}
-.badge{
-  padding:10px 18px;
-  border-radius:999px;
-  background:rgba(255,255,255,.65);
-  backdrop-filter:blur(18px);
-  box-shadow:0 10px 30px rgba(0,0,0,.08);
-  font-weight:700;
-}
-.hero-content{
-  text-align:center;
-}
-.hero-content h1{
-  font-size:clamp(42px,8vw,82px);
+  font-size:30px;
   font-weight:950;
-  line-height:1;
-  margin-bottom:18px;
+  letter-spacing:1px;
 }
-.hero-content h1 span{
+
+.nav-pill{
+  padding:14px 22px;
+  border-radius:999px;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(255,255,255,.9);
+  box-shadow:0 15px 35px rgba(15,23,42,.08);
+  backdrop-filter:blur(20px);
+  font-weight:800;
+}
+
+.hero{
+  min-height:100vh;
+}
+
+.hero-grid{
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:38px;
+  align-items:center;
+}
+
+.hero h1{
+  font-size:clamp(50px,8vw,92px);
+  line-height:.95;
+  font-weight:950;
+  letter-spacing:-3px;
+  margin-bottom:25px;
+}
+
+.hero h1 span{
   background:linear-gradient(90deg,#ef233c,#16c784);
   -webkit-background-clip:text;
   color:transparent;
 }
-.hero-content p{
-  max-width:720px;
-  margin:0 auto 35px;
-  font-size:18px;
-  color:#475569;
-  line-height:1.7;
-}
-.cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:24px;
-  margin-top:45px;
-}
-.card{
-  padding:28px;
-  border-radius:30px;
-  background:rgba(255,255,255,.62);
-  backdrop-filter:blur(22px);
-  border:1px solid rgba(255,255,255,.8);
-  box-shadow:0 20px 50px rgba(15,23,42,.12);
-}
-.card.red{
-  border:1px solid rgba(239,35,60,.35);
-  box-shadow:0 20px 55px rgba(239,35,60,.18);
-}
-.card.green{
-  border:1px solid rgba(22,199,132,.35);
-  box-shadow:0 20px 55px rgba(22,199,132,.18);
-}
-.icon{
-  width:58px;
-  height:58px;
-  border-radius:18px;
-  display:grid;
-  place-items:center;
-  font-size:26px;
-  margin-bottom:18px;
-}
-.red .icon{background:#ffe8ec;color:#ef233c;}
-.green .icon{background:#e7fff4;color:#16c784;}
-.card h2{
-  font-size:26px;
-  margin-bottom:12px;
-}
-.card p{
-  color:#475569;
-  line-height:1.6;
-}
-.about{
-  margin-top:60px;
-  padding:32px;
-  border-radius:35px;
-  background:rgba(255,255,255,.7);
-  backdrop-filter:blur(24px);
-  box-shadow:0 20px 60px rgba(0,0,0,.1);
-}
-.about h2{
-  font-size:34px;
-  margin-bottom:15px;
-}
-.about p{
-  color:#475569;
+
+.hero p{
+  font-size:19px;
   line-height:1.8;
-  font-size:17px;
+  color:#475569;
+  max-width:760px;
 }
-.contact{
-  margin-top:35px;
+
+.hero-buttons{
   display:flex;
   flex-wrap:wrap;
-  gap:15px;
+  gap:16px;
+  margin-top:32px;
 }
-.contact a{
+
+.btn{
   text-decoration:none;
-  color:#111;
-  padding:15px 22px;
+  color:#111827;
+  background:rgba(255,255,255,.8);
+  padding:16px 24px;
   border-radius:18px;
-  background:white;
-  font-weight:800;
-  box-shadow:0 12px 30px rgba(0,0,0,.08);
+  font-weight:900;
+  box-shadow:0 14px 35px rgba(0,0,0,.08);
 }
-.footer{
+
+.btn.main{
+  background:linear-gradient(135deg,#111827,#334155);
+  color:white;
+}
+
+.phone-card{
+  border-radius:38px;
+  padding:24px;
+  background:rgba(255,255,255,.62);
+  border:1px solid rgba(255,255,255,.85);
+  box-shadow:0 30px 80px rgba(15,23,42,.16);
+  backdrop-filter:blur(28px);
+}
+
+.visual-card{
+  height:210px;
+  border-radius:28px;
+  padding:24px;
+  margin-bottom:18px;
+  color:white;
+  position:relative;
+  overflow:hidden;
+}
+
+.visual-card.red{
+  background:linear-gradient(135deg,#ef233c,#ff758f);
+  box-shadow:0 25px 60px rgba(239,35,60,.28);
+}
+
+.visual-card.green{
+  background:linear-gradient(135deg,#05b86d,#5cffb0);
+  box-shadow:0 25px 60px rgba(5,184,109,.28);
+}
+
+.visual-card h3{
+  font-size:26px;
+  margin-bottom:8px;
+}
+
+.visual-card p{
+  color:rgba(255,255,255,.85);
+  font-size:14px;
+}
+
+.card-chip{
+  width:48px;
+  height:36px;
+  background:rgba(255,255,255,.55);
+  border-radius:10px;
+  margin-top:45px;
+}
+
+.card-number{
+  position:absolute;
+  bottom:26px;
+  left:24px;
+  font-size:18px;
+  letter-spacing:3px;
+  font-weight:900;
+}
+
+.section-title{
   text-align:center;
+  margin-bottom:45px;
+}
+
+.section-title h2{
+  font-size:clamp(36px,5vw,58px);
+  font-weight:950;
+  letter-spacing:-1.5px;
+}
+
+.section-title p{
+  margin-top:12px;
   color:#64748b;
-  margin-top:50px;
+  font-size:18px;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:24px;
+}
+
+.service-card{
+  padding:32px;
+  border-radius:34px;
+  background:rgba(255,255,255,.66);
+  border:1px solid rgba(255,255,255,.9);
+  box-shadow:0 25px 70px rgba(15,23,42,.10);
+  backdrop-filter:blur(24px);
+}
+
+.service-card.red{
+  border-color:rgba(239,35,60,.28);
+  box-shadow:0 25px 70px rgba(239,35,60,.15);
+}
+
+.service-card.green{
+  border-color:rgba(22,199,132,.28);
+  box-shadow:0 25px 70px rgba(22,199,132,.15);
+}
+
+.service-card h3{
+  font-size:30px;
+  margin:18px 0 12px;
+}
+
+.service-card p,
+.service-card li{
+  color:#475569;
+  line-height:1.75;
+  font-size:16px;
+}
+
+.service-card ul{
+  margin-top:15px;
+  padding-left:18px;
+}
+
+.mini-icon{
+  width:70px;
+  height:70px;
+  border-radius:22px;
+  display:grid;
+  place-items:center;
+  font-size:30px;
+}
+
+.red .mini-icon{
+  background:#ffe8ec;
+}
+
+.green .mini-icon{
+  background:#e8fff4;
+}
+
+.about{
+  padding:42px;
+  border-radius:38px;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(255,255,255,.9);
+  box-shadow:0 30px 80px rgba(15,23,42,.12);
+  backdrop-filter:blur(28px);
+}
+
+.about h2{
+  font-size:42px;
+  margin-bottom:18px;
+}
+
+.about p{
+  color:#475569;
+  font-size:18px;
+  line-height:1.85;
+}
+
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:24px;
+}
+
+.tag{
+  padding:12px 16px;
+  border-radius:999px;
+  background:white;
+  font-weight:850;
+  box-shadow:0 10px 25px rgba(0,0,0,.06);
+}
+
+.products{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:16px;
+}
+
+.product{
+  padding:20px;
+  border-radius:24px;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(255,255,255,.9);
+  box-shadow:0 16px 35px rgba(15,23,42,.08);
+  font-weight:850;
+  text-align:center;
+}
+
+.contact-box{
+  text-align:center;
+  padding:45px 22px;
+  border-radius:38px;
+  background:linear-gradient(135deg,rgba(239,35,60,.10),rgba(22,199,132,.13),rgba(255,255,255,.75));
+  border:1px solid rgba(255,255,255,.9);
+  backdrop-filter:blur(28px);
+  box-shadow:0 30px 80px rgba(15,23,42,.12);
+}
+
+.contact-box h2{
+  font-size:44px;
+  margin-bottom:14px;
+}
+
+.contact-links{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:16px;
+  margin-top:25px;
+}
+
+.contact-links a{
+  text-decoration:none;
+  color:#111827;
+  padding:17px 24px;
+  border-radius:20px;
+  background:white;
+  font-weight:900;
+  box-shadow:0 14px 35px rgba(0,0,0,.08);
+}
+
+footer{
+  text-align:center;
+  padding:35px;
+  color:#64748b;
+  font-weight:700;
+}
+
+@media(max-width:850px){
+  .hero-grid{
+    grid-template-columns:1fr;
+  }
+
+  .nav{
+    align-items:flex-start;
+  }
+
+  .hero h1{
+    letter-spacing:-2px;
+  }
 }
 </style>
 </head>
+
 <body>
 
 <section class="hero">
@@ -154,66 +356,165 @@ body{
 
     <div class="nav">
       <div class="logo">KINNICHH</div>
-      <div class="badge">Virtual Card Service</div>
+      <div class="nav-pill">Virtual Card Service</div>
     </div>
 
-    <div class="hero-content">
-      <h1>Virtual Visa Card <span>Services</span></h1>
-      <p>
-        Hey, I'm Kinnichh. I provide virtual Visa card services,
-        Redot Pay, YPT Pay support, and affordable digital premium services.
-      </p>
-    </div>
+    <div class="hero-grid">
+      <div>
+        <h1>Virtual Visa Card <span>Services</span></h1>
 
-    <div class="cards">
-      <div class="card red">
-        <div class="icon">💳</div>
-        <h2>Redot Pay</h2>
         <p>
-          Premium red UI virtual card service for online payments,
-          subscriptions, games, ads boost, and international usage.
+          Hey, I'm Kinnichh. I provide Virtual Visa Card services,
+          Redot Pay support, YPT Pay support, and affordable Digital Premium
+          services for customers who want easy access to global digital platforms.
         </p>
+
+        <div class="hero-buttons">
+          <a class="btn main" href="https://t.me/angsthtun">Contact Telegram</a>
+          <a class="btn" href="https://wa.me/17329668160">WhatsApp</a>
+        </div>
       </div>
 
-      <div class="card green">
-        <div class="icon">🟢</div>
-        <h2>YPT Pay</h2>
-        <p>
-          Beginner-friendly green card service with Visa and Mastercard support.
-          Suitable for digital payments and online purchases.
-        </p>
+      <div class="phone-card">
+        <div class="visual-card red">
+          <h3>Redot Pay</h3>
+          <p>Premium Virtual Visa Card</p>
+          <div class="card-chip"></div>
+          <div class="card-number">•••• 8842</div>
+        </div>
+
+        <div class="visual-card green">
+          <h3>YPT Pay</h3>
+          <p>Visa & Mastercard Support</p>
+          <div class="card-chip"></div>
+          <div class="card-number">•••• 2026</div>
+        </div>
       </div>
-
-      <div class="card">
-        <div class="icon">✨</div>
-        <h2>Digital Premium</h2>
-        <p>
-          I also sell digital premium products at affordable prices,
-          including VPN, AI tools, streaming, editing, and more.
-        </p>
-      </div>
-    </div>
-
-    <div class="about">
-      <h2>About Kinnichh</h2>
-      <p>
-        I am a 20-year-old university student and a male digital service seller.
-        My main services are virtual Visa cards, payment support, and digital premium products.
-        I focus on clean service, clear communication, and trusted customer support.
-      </p>
-
-      <div class="contact">
-        <a href="https://t.me/angsthtun">Telegram: @angsthtun</a>
-        <a href="https://wa.me/17329668160">WhatsApp: +17329668160</a>
-      </div>
-    </div>
-
-    <div class="footer">
-      © 2026 KINNICHH. All rights reserved.
     </div>
 
   </div>
 </section>
+
+<section>
+  <div class="container">
+    <div class="about">
+      <h2>About Kinnichh</h2>
+      <p>
+        I am a 20-year-old university student from Myanmar and a male digital
+        service seller. My main services are Virtual Visa Cards, Redot Pay,
+        YPT Pay, and Digital Premium subscriptions. I focus on clean service,
+        clear communication, and trusted customer support.
+      </p>
+
+      <div class="tags">
+        <div class="tag">20 Years Old</div>
+        <div class="tag">University Student</div>
+        <div class="tag">Myanmar Seller</div>
+        <div class="tag">Virtual Card Service</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+
+    <div class="section-title">
+      <h2>Available Services</h2>
+      <p>Premium virtual card and digital products support.</p>
+    </div>
+
+    <div class="cards">
+      <div class="service-card red">
+        <div class="mini-icon">💳</div>
+        <h3>Redot Pay</h3>
+        <p>
+          Premium red UI virtual card service for online payments,
+          subscriptions, international platforms, games, and ads boost.
+        </p>
+        <ul>
+          <li>Virtual Visa Card Support</li>
+          <li>Online Payment Usage</li>
+          <li>International Digital Services</li>
+        </ul>
+      </div>
+
+      <div class="service-card green">
+        <div class="mini-icon">🟢</div>
+        <h3>YPT Pay</h3>
+        <p>
+          Beginner-friendly green card service with Visa and Mastercard support.
+          Suitable for digital payments and online purchases.
+        </p>
+        <ul>
+          <li>Visa Card Support</li>
+          <li>Mastercard Support</li>
+          <li>Online Shopping & Subscriptions</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <div class="mini-icon">✨</div>
+        <h3>Digital Premium</h3>
+        <p>
+          Affordable digital premium services including VPN, AI tools,
+          streaming platforms, editing apps, and more.
+        </p>
+        <ul>
+          <li>AI Tools</li>
+          <li>VPN Services</li>
+          <li>Streaming Services</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <div class="container">
+
+    <div class="section-title">
+      <h2>Digital Premium Products</h2>
+      <p>Available digital services from KINNICHH.</p>
+    </div>
+
+    <div class="products">
+      <div class="product">Spotify Premium</div>
+      <div class="product">YouTube Premium</div>
+      <div class="product">Netflix</div>
+      <div class="product">Prime Video</div>
+      <div class="product">HBO Max</div>
+      <div class="product">Gemini AI</div>
+      <div class="product">Kling AI</div>
+      <div class="product">Suno AI</div>
+      <div class="product">ExpressVPN</div>
+      <div class="product">HMA VPN</div>
+      <div class="product">Happ VPN</div>
+      <div class="product">V2RayTun VPN</div>
+      <div class="product">V2Box VPN</div>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="contact-box">
+      <h2>Contact Me</h2>
+      <p>For Virtual Visa Card, Redot Pay, YPT Pay, and Digital Premium services.</p>
+
+      <div class="contact-links">
+        <a href="https://t.me/angsthtun">Telegram: @angsthtun</a>
+        <a href="https://wa.me/17329668160">WhatsApp: +17329668160</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2026 KINNICHH — Virtual Card & Digital Premium Services
+</footer>
 
 </body>
 </html>
